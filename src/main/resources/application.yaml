@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: backend
+  profiles:
+    active: local
+# 로컬에서는 local로 배포시에 prod로 수정
+
+# Swagger 기본 경로 (선택)
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
