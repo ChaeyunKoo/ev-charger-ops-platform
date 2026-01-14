@@ -1,4 +1,19 @@
 package com.example.backend.monitoring.repository;
 
-public class ChargingStationRepository {
+import com.example.backend.chargingstation.entity.ChargingStation;
+import com.example.backend.chargingstation.entity.ChargingStationId;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ChargingStationRepository extends JpaRepository<ChargingStation, ChargingStationId> {
+
+    @Query("SELECT cs FROM ChargingStation cs " +
+           "JOIN FETCH cs.regionCode " +
+           "JOIN FETCH cs.regionDetailCode " +
+           "JOIN FETCH cs.agency")
+    List<ChargingStation> findAllWithCodes();
 }
