@@ -73,7 +73,7 @@ public class MultimodalAnalysisService {
                 .build();
 
         AiMultimodalReq.SensorLogInfo sensorInfo = AiMultimodalReq.SensorLogInfo.builder()
-                .sensorTime(sensorLog.getSensorTime().toString())
+                .sensorTime(sensorLog.getSensorTime())
                 .statUpdDt(sensorLog.getStatUpdDt())
                 .note(sensorLog.getNote())
                 .acInputVoltageV(sensorLog.getAcInputVoltageV())

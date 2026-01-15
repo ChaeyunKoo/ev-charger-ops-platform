@@ -4,22 +4,20 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "agency_id")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Agency {
+
     @Id
-    @Column(name = "busiId", length = 2, nullable = false)
+    @Column(name = "busi_id", length = 2)
     private String busiId;
 
-    @Column(name = "busid_description", length = 20, nullable = false)
+    @Column(name = "busid_description", length = 20)
     private String busidDescription;
 }

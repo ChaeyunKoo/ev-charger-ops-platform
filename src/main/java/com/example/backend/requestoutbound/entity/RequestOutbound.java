@@ -2,31 +2,41 @@ package com.example.backend.requestoutbound.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "request_outbound")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RequestOutbound {
-    @Id
-    @Column(name = "proc_id", nullable = false)
-    private Integer procId;
 
-    @Column(name = "answer", columnDefinition = "TEXT", nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "proc_id")
+    private Long procId;
+
+    @Column(name = "answer", nullable = false, columnDefinition = "TEXT")
     private String answer;
 
     @Column(name = "answer_dt", nullable = false)
     private LocalDateTime answerDt;
 
     @Column(name = "req_id", nullable = false)
-    private Integer reqId;
+    private Long reqId;
+
+    @Builder
+    public RequestOutbound(String answer, LocalDateTime answerDt, Long reqId) {
+        this.answer = answer;
+        this.answerDt = answerDt;
+        this.reqId = reqId;
+    }
 }

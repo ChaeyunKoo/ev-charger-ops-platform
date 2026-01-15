@@ -2,35 +2,38 @@ package com.example.backend.report.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "report")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Report {
-    @Id
-    @Column(name = "report_id", nullable = false)
-    private Integer reportId;
 
-    @Column(name = "report_title", length = 255, nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "report_id")
+    private Long reportId;
+
+    @Column(name = "report_title", nullable = false, length = 255)
     private String reportTitle;
 
     @Column(name = "created_time", nullable = false)
     private LocalDateTime createdTime;
 
-    @Column(name = "file_path", length = 255, nullable = false)
+    @Column(name = "file_path", nullable = false, length = 255)
     private String filePath;
 
-    @Column(name = "report_type", length = 20, nullable = false)
+    @Column(name = "report_type", nullable = false, length = 20)
     private String reportType;
 
     @Column(name = "prompt", columnDefinition = "TEXT")
@@ -41,4 +44,17 @@ public class Report {
 
     @Column(name = "data_end_time", nullable = false)
     private LocalDateTime dataEndTime;
+
+    @Builder
+    public Report(String reportTitle, LocalDateTime createdTime, String filePath,
+                  String reportType, String prompt, LocalDateTime dataStartTime,
+                  LocalDateTime dataEndTime) {
+        this.reportTitle = reportTitle;
+        this.createdTime = createdTime;
+        this.filePath = filePath;
+        this.reportType = reportType;
+        this.prompt = prompt;
+        this.dataStartTime = dataStartTime;
+        this.dataEndTime = dataEndTime;
+    }
 }

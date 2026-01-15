@@ -2,26 +2,29 @@ package com.example.backend.notification.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "external_notification")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExternalNotification {
-    @Id
-    @Column(name = "ext_notif_id", nullable = false)
-    private Integer extNotifId;
 
-    @Column(name = "message", columnDefinition = "TEXT", nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ext_notif_id")
+    private Long extNotifId;
+
+    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
     private String message;
 
     @Column(name = "test_mail", columnDefinition = "TEXT")
@@ -29,12 +32,33 @@ public class ExternalNotification {
 
     @Column(name = "chger_time", nullable = false)
     private LocalDateTime chgerTime;
-    
-    @OneToOne(fetch = FetchType.LAZY)
-    @Column(name = "chgerId")
-    private ChargerLog chargerlog;
 
-    @Column(name = "stat_id", length = 8, nullable = false)
-    private ChargerLog chargerlog;
+    @Column(name = "chger_id", nullable = false, length = 2)
+    private String chgerId;
 
+    @Column(name = "stat_id", nullable = false, length = 8)
+    private String statId;
+
+    @Column(name = "zcode", nullable = false, length = 2)
+    private String zcode;
+
+    @Column(name = "zscode", nullable = false, length = 5)
+    private String zscode;
+
+    @Column(name = "busi_id", nullable = false, length = 2)
+    private String busiId;
+
+    @Builder
+    public ExternalNotification(String message, String testMail, LocalDateTime chgerTime,
+                                 String chgerId, String statId, String zcode,
+                                 String zscode, String busiId) {
+        this.message = message;
+        this.testMail = testMail;
+        this.chgerTime = chgerTime;
+        this.chgerId = chgerId;
+        this.statId = statId;
+        this.zcode = zcode;
+        this.zscode = zscode;
+        this.busiId = busiId;
+    }
 }

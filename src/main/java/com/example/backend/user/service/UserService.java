@@ -22,8 +22,6 @@ public class UserService {
 
     @Transactional
     public UserRes signup(SignupReq request) {
-        validateSignupRequest(request);
-
         if (userRepository.existsByEmployeeNum(request.getEmployeeNum())) {
             throw new ConflictException("이미 사용 중인 아이디입니다. 사원 번호를 다시 확인해주세요");
         }
@@ -44,20 +42,5 @@ public class UserService {
         }
 
         return UserRes.from(user);
-    }
-
-    private void validateSignupRequest(SignupReq request) {
-        if (request.getEmployeeNum() == null || request.getEmployeeNum().isBlank()) {
-            throw new BadRequestException("사원번호를 입력하지 않았습니다");
-        }
-        if (request.getPassword() == null || request.getPassword().isBlank()) {
-            throw new BadRequestException("비밀번호를 입력하지 않았습니다");
-        }
-        if (request.getUsername() == null || request.getUsername().isBlank()) {
-            throw new BadRequestException("이름을 입력하지 않았습니다");
-        }
-        if (request.getDepartment() == null || request.getDepartment().isBlank()) {
-            throw new BadRequestException("부서를 입력하지 않았습니다");
-        }
     }
 }

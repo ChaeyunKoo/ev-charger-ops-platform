@@ -22,8 +22,7 @@ public class AiReportClient {
                     .bodyToMono(AiReportRes.class)
                     .block();
         } catch (Exception e) {
-            throw new AiServerException("보고서 생성 중 오류가 발생했습니다.");
+            throw new AiServerException("보고서 생성 중 오류가 발생했습니다.", e);
         }
     }
 }
-

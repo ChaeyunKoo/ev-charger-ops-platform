@@ -1,7 +1,8 @@
 package com.example.backend.notification.service;
 
 import com.example.backend.chargingstation.entity.ChargerLog;
-import com.example.backend.monitoring.repository.ChargerLogRepository;
+import com.example.backend.chargingstation.repository.ChargerLogRepository;
+import com.example.backend.chargingstation.util.ChargerStatusUtil;
 import com.example.backend.notification.dto.CheckboxReq;
 import com.example.backend.notification.dto.ExternalNotificationReq;
 import com.example.backend.notification.entity.ExternalNotification;
@@ -26,8 +27,7 @@ public class NotificationService {
         List<ChargerLog> latestLogs = chargerLogRepository.findLatestLogs();
 
         Set<String> badCaseStatIds = latestLogs.stream()
-                .filter(log -> log.getStat() == 0 || log.getStat() == 1 ||
-                               log.getStat() == 4 || log.getStat() == 5)
+                .filter(ChargerStatusUtil::isBadCase)
                 .map(ChargerLog::getStatId)
                 .collect(Collectors.toSet());
 
@@ -61,14 +61,7 @@ public class NotificationService {
     }
 
     private String buildNotificationMessage(ChargerLog log) {
-        String statusText = switch (log.getStat()) {
-            case 0 -> "알수없음";
-            case 1 -> "통신이상";
-            case 4 -> "운영중지";
-            case 5 -> "점검중";
-            default -> "상태확인필요";
-        };
-
+        String statusText = ChargerStatusUtil.getStatusText(log.getStat());
         return String.format("충전소 %s의 충전기 %s가 '%s' 상태입니다. 확인이 필요합니다.",
                 log.getStatId(), log.getChgerId(), statusText);
     }

@@ -1,20 +1,23 @@
 package com.example.backend.chargingstation.entity;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 public class ChargerLogId implements Serializable {
+
+    private LocalDateTime chgerTime;
     private String chgerId;
     private String statId;
-    private LocalDateTime chgerTime;
+    private String zcode;
+    private String zscode;
+    private String busiId;
 }

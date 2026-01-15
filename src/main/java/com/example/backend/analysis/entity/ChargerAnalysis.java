@@ -2,24 +2,31 @@ package com.example.backend.analysis.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "charger_analysis")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChargerAnalysis {
+
     @Id
-    @Column(name = "chgeranal_id", nullable = false)
-    private Integer chgeranalId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "chgeranal_id")
+    private Long chgeranalId;
 
     @Column(name = "unconf_min")
     private Integer unconfMin;
+
+    @Builder
+    public ChargerAnalysis(Integer unconfMin) {
+        this.unconfMin = unconfMin;
+    }
 }

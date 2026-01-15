@@ -22,7 +22,7 @@ public class AiMultimodalClient {
                     .bodyToMono(AiMultimodalRes.class)
                     .block();
         } catch (Exception e) {
-            throw new AiServerException("멀티모달 분석 중 오류가 발생했습니다.");
+            throw new AiServerException("멀티모달 분석 중 오류가 발생했습니다.", e);
         }
     }
 }

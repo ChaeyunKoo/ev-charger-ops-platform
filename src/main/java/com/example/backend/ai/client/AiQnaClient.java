@@ -22,8 +22,7 @@ public class AiQnaClient {
                     .bodyToMono(AiQnaRes.class)
                     .block();
         } catch (Exception e) {
-            throw new AiServerException("답변 생성 중 오류가 발생했습니다.");
+            throw new AiServerException("답변 생성 중 오류가 발생했습니다.", e);
         }
     }
 }
-

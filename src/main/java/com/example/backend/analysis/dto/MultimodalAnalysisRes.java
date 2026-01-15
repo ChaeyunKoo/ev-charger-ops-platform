@@ -14,3 +14,4 @@ public class MultimodalAnalysisRes {
     private Boolean cleanYN;
     private String cleanDetails;
 }
+

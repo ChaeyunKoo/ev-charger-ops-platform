@@ -9,4 +9,3 @@ public class QnaReq {
 
     private String prompt;
 }
-

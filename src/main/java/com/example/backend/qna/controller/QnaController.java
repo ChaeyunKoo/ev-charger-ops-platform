@@ -27,4 +27,3 @@ public class QnaController {
         return ResponseEntity.ok(response);
     }
 }
-

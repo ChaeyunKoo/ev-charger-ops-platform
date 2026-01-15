@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,11 +38,14 @@ public class ChargingStationService {
 
         List<Charger> chargers = chargerRepository.findByStatId(statId);
 
+        // N+1 문제 해결: 한 번의 쿼리로 모든 최신 로그 조회
+        List<ChargerLog> latestLogs = chargerLogRepository.findLatestLogsByStatId(statId);
+        Map<String, ChargerLog> logMap = latestLogs.stream()
+                .collect(Collectors.toMap(ChargerLog::getChgerId, log -> log));
+
         List<StationDetailRes.ChargerDetail> chargerDetails = new ArrayList<>();
         for (Charger charger : chargers) {
-            ChargerLog latestLog = chargerLogRepository
-                    .findLatestByStatIdAndChgerId(statId, charger.getChgerId())
-                    .orElse(null);
+            ChargerLog latestLog = logMap.get(charger.getChgerId());
 
             StationDetailRes.ChargerDetail detail = StationDetailRes.ChargerDetail.builder()
                     .chgerId(charger.getChgerId())
