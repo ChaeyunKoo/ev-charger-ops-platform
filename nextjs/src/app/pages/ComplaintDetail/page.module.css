@@ -14,178 +14,235 @@
   max-width: 900px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.backButton {
-  background: transparent;
-  border: none;
-  color: #2563eb;
-  font-family: Inter, Arial, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 8px 0;
-  transition: color 0.2s;
-}
-
-.backButton:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
   gap: 24px;
 }
 
-.statusBadge {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.statusCompleted {
-  display: inline-block;
-  padding: 6px 12px;
-  background-color: #2563eb;
-  color: #ffffff;
-  font-family: Inter, Arial, sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 15.73px;
-  border-radius: 4px;
-}
-
-.statusPending {
-  display: inline-block;
-  padding: 6px 12px;
-  background-color: #dc2626;
-  color: #ffffff;
-  font-family: Inter, Arial, sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 15.73px;
-  border-radius: 4px;
-}
-
-.title {
+/* 상단 페이지 타이틀(이미지처럼 중앙) */
+.pageTitle {
   font-family: Inter, Arial, sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 32px;
   line-height: 38px;
+  text-align: center;
   color: #333333;
   margin: 0;
 }
 
-.metaInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px 0;
-  border-bottom: 1px solid #e0e0e0;
+/* 전체 카드 프레임 */
+.card {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 18px;
 }
 
-.metaItem {
+/* 민원/답변 박스(이미지처럼 큰 흰 박스 + 라인) */
+.sectionBox {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.sectionInner {
+  border: 1px solid #efefef;
+  border-radius: 8px;
+  padding: 16px;
+  background: #ffffff;
+}
+
+/* 민원 제목 줄 */
+.fieldTitleRow {
   display: flex;
   align-items: center;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #efefef;
+}
+
+.fieldTitleLabel {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 16px;
+  color: #333333;
+  min-width: 70px;
+}
+
+.fieldTitleValue {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 16px;
+  color: #333333;
+}
+
+/* 민원 유형/접수일시 (2컬럼) */
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
+  padding: 14px 0;
+}
+
+.metaCell {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .metaLabel {
   font-family: Inter, Arial, sans-serif;
   font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 17px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
   color: #666666;
-  min-width: 80px;
+  min-width: 60px;
 }
 
 .metaValue {
   font-family: Inter, Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  color: #333333;
+}
+
+/* 민원 내용 라벨 */
+.textAreaLabel {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  color: #666666;
+  margin-bottom: 8px;
+}
+
+/* 민원 내용 박스(이미지처럼 큰 입력 영역 느낌) */
+.textAreaBox {
+  width: 100%;
+  min-height: 110px;
+  border: 1px solid #efefef;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #333333;
+  white-space: pre-wrap;
+}
+
+/* 답변 헤더: 뱃지 + 답변일시 */
+.replyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #efefef;
+  margin-bottom: 12px;
+}
+
+.replyBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 14px;
+  color: #ffffff;
+}
+
+.replyBadgeDone {
+  background-color: #3b82f6;
+}
+
+.replyBadgePending {
+  background-color: #ef4444;
+}
+
+.replyMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.replyMetaLabel {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  color: #666666;
+}
+
+.replyMetaValue {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  color: #333333;
+}
+
+/* 답변 내용 박스 */
+.textAreaBoxReply {
+  width: 100%;
+  min-height: 130px;
+  border: 1px solid #efefef;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #333333;
+  white-space: pre-wrap;
+}
+
+/* 하단 버튼 영역 */
+.bottomActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+}
+
+.listButton {
+  width: 140px;
+  height: 44px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 2px;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 600;
   font-size: 14px;
-  line-height: 17px;
-  color: #333333;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.contentSection {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-  background-color: #f9fafb;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-}
-
-.sectionTitle {
-  font-family: Inter, Arial, sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 22px;
-  color: #333333;
-  margin: 0;
-}
-
-.contentText {
-  font-family: Inter, Arial, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 24px;
-  color: #333333;
-  white-space: pre-wrap;
-}
-
-.contentText p {
-  margin: 0 0 12px 0;
-}
-
-.contentText p:last-child {
-  margin-bottom: 0;
-}
-
-.replySection {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 8px;
-}
-
-.replyText {
-  font-family: Inter, Arial, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 24px;
-  color: #1e3a8a;
-  white-space: pre-wrap;
-}
-
-.replyText p {
-  margin: 0 0 12px 0;
-}
-
-.replyText p:last-child {
-  margin-bottom: 0;
+.listButton:hover {
+  background-color: #2563eb;
 }
 
 .loading,
@@ -212,28 +269,29 @@
     max-width: 100%;
   }
 
-  .title {
+  .pageTitle {
     font-size: 24px;
     line-height: 30px;
   }
 
-  .contentSection,
-  .replySection {
-    padding: 16px;
+  .card {
+    padding: 14px;
   }
 
-  .metaInfo {
-    flex-direction: column;
-    gap: 8px;
+  .sectionBox {
+    padding: 12px;
   }
 
-  .metaItem {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+  .sectionInner {
+    padding: 12px;
   }
 
-  .metaLabel {
-    min-width: auto;
+  .metaGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .listButton {
+    width: 100%;
   }
 }
