@@ -35,36 +35,7 @@
   margin: 0;
 }
 
-.statusFilterTabs {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  align-items: center;
-  height: 38.79px;
-}
-
-.statusTab {
-  font-family: Inter, Arial, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 15.73px;
-  color: #333333;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.2s;
-}
-
-.statusTab:hover {
-  color: #2563eb;
-}
-
-.statusTabActive {
-  font-weight: 600;
-  color: #2563eb;
-}
+/* ✅ 상태 탭(미처리/처리) 제거됨: statusFilterTabs, statusTab, statusTabActive 삭제 */
 
 .searchSection {
   background-color: #f9fafb;
@@ -82,30 +53,7 @@
   gap: 15px;
 }
 
-.searchTypeGroup {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.radioLabel {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  font-family: Inter, Arial, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 15.73px;
-  color: #333333;
-}
-
-.radioLabel input[type="radio"] {
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-}
+/* ✅ 라디오(제목/제목+내용) 제거됨: searchTypeGroup, radioLabel 삭제 */
 
 .searchInput {
   flex: 1;
@@ -178,6 +126,7 @@
   color: #666666;
 }
 
+/* calendarButton은 현재 JSX에서 사용 안 하면 삭제 가능. 남겨도 무방 */
 .calendarButton {
   width: 40px;
   height: 40px;
@@ -259,24 +208,21 @@
   height: 16px;
 }
 
-.emptyMessage {
-  text-align: center;
-  padding: 40px;
-  color: #999999;
-  font-size: 14px;
-}
-
-.actionButtons {
+/* ✅ 검색/초기화 버튼을 필터 박스 안으로 넣기 위한 래퍼 */
+.filterButtons {
   display: flex;
   gap: 20px;
   justify-content: center;
   align-items: center;
-  height: 60px;
+  margin-top: 10px;
 }
+
+/* ✅ actionButtons는 JSX에서 제거되었으므로 삭제(여기서도 제거) */
+/* .actionButtons { ... } 삭제됨 */
 
 .searchButton {
   width: 120px;
-  height: 60px;
+  height: 44px; /* 기존 60px -> 필터 박스 내부에 맞게 조정 */
   background-color: #2563eb;
   color: #ffffff;
   border: none;
@@ -296,7 +242,7 @@
 
 .resetButton {
   width: 120px;
-  height: 60px;
+  height: 44px; /* 기존 60px -> 필터 박스 내부에 맞게 조정 */
   background-color: #ffffff;
   color: #333333;
   border: 1px solid #d0d0d0;
@@ -345,8 +291,15 @@
   padding: 0;
 }
 
-.agentProcessButton:hover {
+.agentProcessButton:hover:not(:disabled) {
   color: #1d4ed8;
+}
+
+/* ✅ 항상 노출 + 선택 없을 때 비활성화 스타일 */
+.agentProcessButton:disabled {
+  color: #999999;
+  cursor: not-allowed;
+  text-decoration: none;
 }
 
 .itemsPerPage {
@@ -436,6 +389,13 @@
   color: #666666;
 }
 
+.emptyMessage {
+  text-align: center;
+  padding: 40px;
+  color: #999999;
+  font-size: 14px;
+}
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -509,17 +469,6 @@
     font-size: 11px;
   }
 
-  .actionButtons {
-    flex-direction: column;
-    height: auto;
-    gap: 10px;
-  }
-
-  .searchButton,
-  .resetButton {
-    width: 100%;
-  }
-
   .searchSection {
     padding: 15px;
   }
@@ -538,5 +487,16 @@
   .categorySelect {
     width: 100%;
     max-width: 100%;
+  }
+
+  .filterButtons {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .searchButton,
+  .resetButton {
+    width: 100%;
   }
 }

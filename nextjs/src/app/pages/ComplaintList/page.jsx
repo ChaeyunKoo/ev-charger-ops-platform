@@ -5,14 +5,13 @@ import styles from './page.module.css';
 
 export default function ComplaintList() {
   // 검색 필터 상태
-  const [searchType, setSearchType] = useState('title'); // 'title' or 'titleAndContent'
   const [searchKeyword, setSearchKeyword] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [complaintType, setComplaintType] = useState(''); // '충전기 고장' | '결제 오류' | 'AS 콜센터 연결 지연' | '기타' | ''
   const [showUnprocessed, setShowUnprocessed] = useState(true); // 미처리 민원
   const [showProcessed, setShowProcessed] = useState(false); // 처리된 민원
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -42,18 +41,12 @@ export default function ComplaintList() {
       filtered = [];
     }
 
-    // 검색어 필터
+    // 검색어 필터 (제목+내용만 사용)
     if (searchKeyword.trim()) {
-      filtered = filtered.filter(c => {
-        if (searchType === 'title') {
-          return c.title.toLowerCase().includes(searchKeyword.toLowerCase());
-        } else {
-          return (
-            c.title.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-            c.content.toLowerCase().includes(searchKeyword.toLowerCase())
-          );
-        }
-      });
+      const kw = searchKeyword.toLowerCase();
+      filtered = filtered.filter(c =>
+        c.title.toLowerCase().includes(kw) || c.content.toLowerCase().includes(kw)
+      );
     }
 
     // 기간 필터
@@ -85,7 +78,7 @@ export default function ComplaintList() {
       ...complaint,
       number: index + 1
     }));
-  }, [searchKeyword, searchType, startDate, endDate, complaintType, showUnprocessed, showProcessed, allComplaints]);
+  }, [searchKeyword, startDate, endDate, complaintType, showUnprocessed, showProcessed, allComplaints]);
 
   // 페이지네이션
   const paginatedComplaints = useMemo(() => {
@@ -103,7 +96,6 @@ export default function ComplaintList() {
   };
 
   const handleReset = () => {
-    setSearchType('title');
     setSearchKeyword('');
     setStartDate('');
     setEndDate('');
@@ -153,6 +145,10 @@ export default function ComplaintList() {
   };
 
   const handleAgentProcess = () => {
+    if (selectedItems.length === 0) {
+      alert('처리할 민원을 선택해주세요.');
+      return;
+    }
     // Agent 처리 로직 구현
     console.log('선택된 민원 Agent 처리:', selectedItems);
   };
@@ -160,9 +156,7 @@ export default function ComplaintList() {
   const renderPagination = () => {
     const pages = [];
     if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       if (currentPage <= 3) {
         pages.push(1, 2, 3, '...', totalPages);
@@ -209,63 +203,17 @@ export default function ComplaintList() {
         <div className={styles.mainFrame}>
           <h1 className={styles.title}>민원 조회</h1>
 
-          {/* 상태 필터 탭 */}
-          <div className={styles.statusFilterTabs}>
-            <button
-              className={`${styles.statusTab} ${showUnprocessed ? styles.statusTabActive : ''}`}
-              onClick={() => {
-                setShowUnprocessed(true);
-                setShowProcessed(false);
-                setCurrentPage(1);
-              }}
-            >
-              미처리 민원
-            </button>
-            <button
-              className={`${styles.statusTab} ${showProcessed ? styles.statusTabActive : ''}`}
-              onClick={() => {
-                setShowUnprocessed(false);
-                setShowProcessed(true);
-                setCurrentPage(1);
-              }}
-            >
-              처리된 민원
-            </button>
-          </div>
-
           {/* 검색 필터 섹션 */}
           <div className={styles.searchSection}>
-            {/* 검색어 입력 */}
+            {/* 검색어 입력 (라디오 삭제, 입력란만) */}
             <div className={styles.searchRow}>
-              <div className={styles.searchTypeGroup}>
-                <label className={styles.radioLabel}>
-                  <input
-                    type="radio"
-                    name="searchType"
-                    value="title"
-                    checked={searchType === 'title'}
-                    onChange={(e) => setSearchType(e.target.value)}
-                  />
-                  <span>제목</span>
-                </label>
-                <label className={styles.radioLabel}>
-                  <input
-                    type="radio"
-                    name="searchType"
-                    value="titleAndContent"
-                    checked={searchType === 'titleAndContent'}
-                    onChange={(e) => setSearchType(e.target.value)}
-                  />
-                  <span>제목+내용</span>
-                </label>
-              </div>
               <input
                 type="text"
                 className={styles.searchInput}
                 placeholder="검색어를 입력하세요"
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
 
@@ -316,6 +264,7 @@ export default function ComplaintList() {
                     if (!e.target.checked && !showProcessed) {
                       setShowProcessed(true);
                     }
+                    setCurrentPage(1);
                   }}
                 />
                 <span>미처리된 민원</span>
@@ -329,31 +278,38 @@ export default function ComplaintList() {
                     if (!e.target.checked && !showUnprocessed) {
                       setShowUnprocessed(true);
                     }
+                    setCurrentPage(1);
                   }}
                 />
                 <span>처리된 민원</span>
               </label>
             </div>
-          </div>
 
-          {/* 액션 버튼 */}
-          <div className={styles.actionButtons}>
-            <button className={styles.searchButton} onClick={handleSearch}>
-              🔍 검색
-            </button>
-            <button className={styles.resetButton} onClick={handleReset}>
-              ↻ 초기화
-            </button>
+            {/* 검색/초기화 버튼: 탭 박스(필터 박스) 안으로 이동 */}
+            <div className={styles.filterButtons}>
+              <button className={styles.searchButton} onClick={handleSearch}>
+                🔍 검색
+              </button>
+              <button className={styles.resetButton} onClick={handleReset}>
+                ↻ 초기화
+              </button>
+            </div>
           </div>
 
           {/* 테이블 컨트롤 */}
           <div className={styles.tableControls}>
-            <span className={styles.totalCount}>총 {totalCount}건 등록({currentPage}/{totalPages})</span>
-            {selectedItems.length > 0 && (
-              <button className={styles.agentProcessButton} onClick={handleAgentProcess}>
-                선택 민원 Agent 처리
-              </button>
-            )}
+            <span className={styles.totalCount}>총 {totalCount}건 등록({currentPage}/{totalPages || 1})</span>
+
+            {/* 항상 표시되도록 변경 */}
+            <button
+              className={styles.agentProcessButton}
+              onClick={handleAgentProcess}
+              disabled={selectedItems.length === 0}
+              title={selectedItems.length === 0 ? '민원을 선택하면 처리할 수 있습니다.' : ''}
+            >
+              선택 민원 Agent 처리
+            </button>
+
             <span className={styles.itemsPerPage}>{itemsPerPage}개씩</span>
           </div>
 
@@ -365,7 +321,10 @@ export default function ComplaintList() {
                   <th className={styles.checkboxColumn}>
                     <input
                       type="checkbox"
-                      checked={paginatedComplaints.length > 0 && selectedItems.length === paginatedComplaints.length}
+                      checked={
+                        paginatedComplaints.length > 0 &&
+                        paginatedComplaints.every(item => selectedItems.includes(item.id))
+                      }
                       onChange={(e) => handleSelectAll(e.target.checked)}
                     />
                   </th>
