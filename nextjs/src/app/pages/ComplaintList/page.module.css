@@ -1,0 +1,316 @@
+.container {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #ffffff;
+  font-family: Inter, Arial, sans-serif;
+  padding: 40px 20px;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 1101px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 45px;
+  line-height: 54.46px;
+  text-align: center;
+  color: #333333;
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  height: 38.79px;
+}
+
+.filterButton {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #333333;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.filterButton:hover {
+  color: #2563eb;
+}
+
+.filterActive {
+  font-weight: 600;
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+}
+
+.searchButton {
+  width: 120px;
+  height: 60px;
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.searchButton:hover {
+  background-color: #1d4ed8;
+}
+
+.resetButton {
+  width: 120px;
+  height: 60px;
+  background-color: #ffffff;
+  color: #333333;
+  border: 1px solid #d0d0d0;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.resetButton:hover {
+  background-color: #f5f5f5;
+}
+
+.tableControls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #333333;
+}
+
+.totalCount {
+  font-size: 13px;
+}
+
+.agentProcessButton {
+  background: transparent;
+  border: none;
+  color: #2563eb;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.52px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.agentProcessButton:hover {
+  color: #1d4ed8;
+}
+
+.itemsPerPage {
+  margin-left: auto;
+  font-size: 12px;
+  color: #333333;
+}
+
+.tableWrapper {
+  width: 100%;
+  margin-top: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.table thead {
+  background-color: #f9fafb;
+}
+
+.table th {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 14.52px;
+  color: #555555;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table td {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.52px;
+  color: #000000;
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.checkboxColumn {
+  width: 40px;
+  text-align: center;
+}
+
+.checkboxColumn input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.numberColumn {
+  width: 60px;
+}
+
+.statusColumn {
+  width: 80px;
+}
+
+.titleColumn {
+  min-width: 200px;
+}
+
+.categoryColumn {
+  width: 100px;
+}
+
+.dateColumn {
+  width: 150px;
+}
+
+.statusUnprocessed {
+  color: #000000;
+  font-weight: 500;
+}
+
+.statusProcessed {
+  color: #666666;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  height: 44.68px;
+}
+
+.paginationButton {
+  min-width: 32px;
+  height: 32px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  color: #333333;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+.paginationButton:disabled {
+  color: #999999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.paginationActive {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.paginationActive:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 10px;
+  }
+
+  .wrapper {
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 32px;
+    line-height: 38px;
+  }
+
+  .table {
+    font-size: 11px;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px;
+    font-size: 11px;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+  }
+
+  .searchButton,
+  .resetButton {
+    width: 100%;
+  }
+}
