@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './page.module.css';
+import Header from '@/components/Header'; // 1. Header 컴포넌트 임포트
 
 export default function ComplaintDetail() {
   const searchParams = useSearchParams();
@@ -95,73 +96,77 @@ export default function ComplaintDetail() {
   const replyDateText = complaint.replyDate || '-';
 
   return (
-    <div className={styles.container}>
-      <div className={styles.wrapper}>
-        {/* 페이지 타이틀 */}
-        <h1 className={styles.pageTitle}>민원 상세 조회</h1>
+      <>
+          <Header />
+          <div className={styles.container}>
+              <div className={styles.wrapper}>
+                  {/* 페이지 타이틀 */}
+                  <h1 className={styles.pageTitle}>민원 상세 조회</h1>
 
-        {/* 큰 카드(이미지처럼 내부에 민원/답변 박스) */}
-        <div className={styles.card}>
-          {/* 민원 박스 */}
-          <div className={styles.sectionBox}>
-            <div className={styles.sectionInner}>
-              <div className={styles.fieldTitleRow}>
-                <div className={styles.fieldTitleLabel}>민원 제목</div>
-                <div className={styles.fieldTitleValue}>{complaint.title}</div>
-              </div>
+                  {/* 큰 카드(이미지처럼 내부에 민원/답변 박스) */}
+                  <div className={styles.card}>
+                      {/* 민원 박스 */}
+                      <div className={styles.sectionBox}>
+                          <div className={styles.sectionInner}>
+                              <div className={styles.fieldTitleRow}>
+                                  {/*<div className={styles.fieldTitleLabel}>민원 제목</div>*/}
+                                  <div className={styles.fieldTitleValue}>{complaint.title}</div>
+                              </div>
 
-              <div className={styles.metaGrid}>
-                <div className={styles.metaCell}>
-                  <div className={styles.metaLabel}>민원 유형</div>
-                  <div className={styles.metaValue}>{complaint.category}</div>
-                </div>
-                <div className={styles.metaCell}>
-                  <div className={styles.metaLabel}>접수 일시</div>
-                  <div className={styles.metaValue}>{complaint.receivedDate}</div>
-                </div>
-              </div>
+                              <div className={styles.metaGrid}>
+                                  <div className={styles.metaCell}>
+                                      <div className={styles.metaLabel}>민원 유형</div>
+                                      <div className={styles.metaValue}>{complaint.category}</div>
+                                  </div>
+                                  <div className={styles.metaCell}>
+                                      <div className={styles.metaLabel}>접수 일시</div>
+                                      <div className={styles.metaValue}>{complaint.receivedDate}</div>
+                                  </div>
+                              </div>
 
-              <div className={styles.textAreaLabel}>민원 내용</div>
-              <div className={styles.textAreaBox}>
-                {complaint.content}
-              </div>
-            </div>
-          </div>
 
-          {/* 답변 박스 */}
-          <div className={styles.sectionBox}>
-            <div className={styles.sectionInner}>
-              <div className={styles.replyHeader}>
+                              <div className={styles.textAreaBox}>
+                                  {complaint.content}
+                              </div>
+                          </div>
+                      </div>
+
+                      {/* 답변 박스 */}
+                      <div className={styles.sectionBox}>
+                          <div className={styles.sectionInner}>
+                              <div className={styles.replyHeader}>
                 <span
-                  className={`${styles.replyBadge} ${
-                    complaint.hasReply ? styles.replyBadgeDone : styles.replyBadgePending
-                  }`}
+                    className={`${styles.replyBadge} ${
+                        complaint.hasReply ? styles.replyBadgeDone : styles.replyBadgePending
+                    }`}
                 >
                   {replyBadgeText}
                 </span>
 
-                <div className={styles.replyMeta}>
-                  <span className={styles.replyMetaLabel}>답변 일시</span>
-                  <span className={styles.replyMetaValue}>{replyDateText}</span>
-                </div>
-              </div>
+                                  <div className={styles.replyMeta}>
+                                      <span className={styles.replyMetaLabel}>답변 일시</span>
+                                      <span className={styles.replyMetaValue}>{replyDateText}</span>
+                                  </div>
+                              </div>
 
-              <div className={styles.textAreaBoxReply}>
-                {complaint.hasReply && complaint.reply
-                  ? complaint.reply
-                  : '답변 내용'}
-              </div>
-            </div>
-          </div>
+                              <div className={styles.textAreaBoxReply}>
+                                  {complaint.hasReply && complaint.reply
+                                      ? complaint.reply
+                                      : '답변 내용'}
+                              </div>
+                          </div>
+                      </div>
 
-          {/* 하단 목록 버튼 */}
-          <div className={styles.bottomActions}>
-            <button className={styles.listButton} onClick={handleBack}>
-              목록
-            </button>
+                      {/* 하단 목록 버튼 */}
+                      <div className={styles.bottomActions}>
+                          <button className={styles.listButton} onClick={handleBack}>
+                              목록
+                          </button>
+                      </div>
+                  </div>
+              </div>
           </div>
-        </div>
-      </div>
-    </div>
+      </>
+
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Header from '@/components/Header'; // 1. Header 컴포넌트 임포트
 import styles from './page.module.css';
 
 export default function ComplaintList() {
@@ -198,180 +199,184 @@ export default function ComplaintList() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.wrapper}>
-        <div className={styles.mainFrame}>
-          <h1 className={styles.title}>민원 조회</h1>
+      <>
+          <Header />
+          <div className={styles.container}>
+              <div className={styles.wrapper}>
+                  <div className={styles.mainFrame}>
+                      <h1 className={styles.title}>민원 조회</h1>
 
-          {/* 검색 필터 섹션 */}
-          <div className={styles.searchSection}>
-            {/* 검색어 입력 (라디오 삭제, 입력란만) */}
-            <div className={styles.searchRow}>
-              <input
-                type="text"
-                className={styles.searchInput}
-                placeholder="검색어를 입력하세요"
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              />
-            </div>
+                      {/* 검색 필터 섹션 */}
+                      <div className={styles.searchSection}>
+                          {/* 검색어 입력 (라디오 삭제, 입력란만) */}
+                          <div className={styles.searchRow}>
+                              <input
+                                  type="text"
+                                  className={styles.searchInput}
+                                  placeholder="검색어를 입력하세요"
+                                  value={searchKeyword}
+                                  onChange={(e) => setSearchKeyword(e.target.value)}
+                                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                              />
+                          </div>
 
-            {/* 기간 선택 */}
-            <div className={styles.dateRow}>
-              <label className={styles.dateLabel}>기간:</label>
-              <div className={styles.dateInputGroup}>
-                <input
-                  type="date"
-                  className={styles.dateInput}
-                  value={startDate}
-                  onChange={handleStartDateChange}
-                />
-                <span className={styles.dateSeparator}>~</span>
-                <input
-                  type="date"
-                  className={styles.dateInput}
-                  value={endDate}
-                  onChange={handleEndDateChange}
-                />
-              </div>
-            </div>
+                          {/* 기간 선택 */}
+                          <div className={styles.dateRow}>
+                              <label className={styles.dateLabel}>기간:</label>
+                              <div className={styles.dateInputGroup}>
+                                  <input
+                                      type="date"
+                                      className={styles.dateInput}
+                                      value={startDate}
+                                      onChange={handleStartDateChange}
+                                  />
+                                  <span className={styles.dateSeparator}>~</span>
+                                  <input
+                                      type="date"
+                                      className={styles.dateInput}
+                                      value={endDate}
+                                      onChange={handleEndDateChange}
+                                  />
+                              </div>
+                          </div>
 
-            {/* 민원 유형 분류 */}
-            <div className={styles.categoryRow}>
-              <label className={styles.categoryLabel}>민원 유형:</label>
-              <select
-                className={styles.categorySelect}
-                value={complaintType}
-                onChange={(e) => setComplaintType(e.target.value)}
-              >
-                <option value="">전체</option>
-                <option value="충전기 고장">충전기 고장</option>
-                <option value="결제 오류">결제 오류</option>
-                <option value="AS 콜센터 연결 지연">AS 콜센터 연결 지연</option>
-                <option value="기타">기타</option>
-              </select>
-            </div>
+                          {/* 민원 유형 분류 */}
+                          <div className={styles.categoryRow}>
+                              <label className={styles.categoryLabel}>민원 유형:</label>
+                              <select
+                                  className={styles.categorySelect}
+                                  value={complaintType}
+                                  onChange={(e) => setComplaintType(e.target.value)}
+                              >
+                                  <option value="">전체</option>
+                                  <option value="충전기 고장">충전기 고장</option>
+                                  <option value="결제 오류">결제 오류</option>
+                                  <option value="AS 콜센터 연결 지연">AS 콜센터 연결 지연</option>
+                                  <option value="기타">기타</option>
+                              </select>
+                          </div>
 
-            {/* 상태 필터 (체크박스) */}
-            <div className={styles.statusRow}>
-              <label className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={showUnprocessed}
-                  onChange={(e) => {
-                    setShowUnprocessed(e.target.checked);
-                    if (!e.target.checked && !showProcessed) {
-                      setShowProcessed(true);
-                    }
-                    setCurrentPage(1);
-                  }}
-                />
-                <span>미처리된 민원</span>
-              </label>
-              <label className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={showProcessed}
-                  onChange={(e) => {
-                    setShowProcessed(e.target.checked);
-                    if (!e.target.checked && !showUnprocessed) {
-                      setShowUnprocessed(true);
-                    }
-                    setCurrentPage(1);
-                  }}
-                />
-                <span>처리된 민원</span>
-              </label>
-            </div>
+                          {/* 상태 필터 (체크박스) */}
+                          <div className={styles.statusRow}>
+                              <label className={styles.checkboxLabel}>
+                                  <input
+                                      type="checkbox"
+                                      checked={showUnprocessed}
+                                      onChange={(e) => {
+                                          setShowUnprocessed(e.target.checked);
+                                          if (!e.target.checked && !showProcessed) {
+                                              setShowProcessed(true);
+                                          }
+                                          setCurrentPage(1);
+                                      }}
+                                  />
+                                  <span>미처리된 민원</span>
+                              </label>
+                              <label className={styles.checkboxLabel}>
+                                  <input
+                                      type="checkbox"
+                                      checked={showProcessed}
+                                      onChange={(e) => {
+                                          setShowProcessed(e.target.checked);
+                                          if (!e.target.checked && !showUnprocessed) {
+                                              setShowUnprocessed(true);
+                                          }
+                                          setCurrentPage(1);
+                                      }}
+                                  />
+                                  <span>처리된 민원</span>
+                              </label>
+                          </div>
 
-            {/* 검색/초기화 버튼: 탭 박스(필터 박스) 안으로 이동 */}
-            <div className={styles.filterButtons}>
-              <button className={styles.searchButton} onClick={handleSearch}>
-                🔍 검색
-              </button>
-              <button className={styles.resetButton} onClick={handleReset}>
-                ↻ 초기화
-              </button>
-            </div>
-          </div>
+                          {/* 검색/초기화 버튼: 탭 박스(필터 박스) 안으로 이동 */}
+                          <div className={styles.filterButtons}>
+                              <button className={styles.searchButton} onClick={handleSearch}>
+                                  🔍 검색
+                              </button>
+                              <button className={styles.resetButton} onClick={handleReset}>
+                                  ↻ 초기화
+                              </button>
+                          </div>
+                      </div>
 
-          {/* 테이블 컨트롤 */}
-          <div className={styles.tableControls}>
-            <span className={styles.totalCount}>총 {totalCount}건 등록({currentPage}/{totalPages || 1})</span>
+                      {/* 테이블 컨트롤 */}
+                      <div className={styles.tableControls}>
+                          <span className={styles.totalCount}>총 {totalCount}건 등록({currentPage}/{totalPages || 1})</span>
 
-            {/* 항상 표시되도록 변경 */}
-            <button
-              className={styles.agentProcessButton}
-              onClick={handleAgentProcess}
-              disabled={selectedItems.length === 0}
-              title={selectedItems.length === 0 ? '민원을 선택하면 처리할 수 있습니다.' : ''}
-            >
-              선택 민원 Agent 처리
-            </button>
+                          {/* 항상 표시되도록 변경 */}
+                          <button
+                              className={styles.agentProcessButton}
+                              onClick={handleAgentProcess}
+                              disabled={selectedItems.length === 0}
+                              title={selectedItems.length === 0 ? '민원을 선택하면 처리할 수 있습니다.' : ''}
+                          >
+                              선택 민원 Agent 처리
+                          </button>
 
-            <span className={styles.itemsPerPage}>{itemsPerPage}개씩</span>
-          </div>
+                          <span className={styles.itemsPerPage}>{itemsPerPage}개씩</span>
+                      </div>
 
-          {/* 테이블 */}
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th className={styles.checkboxColumn}>
-                    <input
-                      type="checkbox"
-                      checked={
-                        paginatedComplaints.length > 0 &&
-                        paginatedComplaints.every(item => selectedItems.includes(item.id))
-                      }
-                      onChange={(e) => handleSelectAll(e.target.checked)}
-                    />
-                  </th>
-                  <th className={styles.numberColumn}>번호</th>
-                  <th className={styles.statusColumn}>상태</th>
-                  <th className={styles.titleColumn}>제목</th>
-                  <th className={styles.categoryColumn}>분류</th>
-                  <th className={styles.dateColumn}>등록일시</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedComplaints.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className={styles.emptyMessage}>
-                      검색 결과가 없습니다.
-                    </td>
-                  </tr>
-                ) : (
-                  paginatedComplaints.map((complaint) => (
-                    <tr key={complaint.id}>
-                      <td className={styles.checkboxColumn}>
-                        <input
-                          type="checkbox"
-                          checked={selectedItems.includes(complaint.id)}
-                          onChange={() => handleSelectItem(complaint.id)}
-                        />
-                      </td>
-                      <td className={styles.numberColumn}>{complaint.number}</td>
-                      <td className={styles.statusColumn}>
+                      {/* 테이블 */}
+                      <div className={styles.tableWrapper}>
+                          <table className={styles.table}>
+                              <thead>
+                              <tr>
+                                  <th className={styles.checkboxColumn}>
+                                      <input
+                                          type="checkbox"
+                                          checked={
+                                              paginatedComplaints.length > 0 &&
+                                              paginatedComplaints.every(item => selectedItems.includes(item.id))
+                                          }
+                                          onChange={(e) => handleSelectAll(e.target.checked)}
+                                      />
+                                  </th>
+                                  <th className={styles.numberColumn}>번호</th>
+                                  <th className={styles.statusColumn}>상태</th>
+                                  <th className={styles.titleColumn}>제목</th>
+                                  <th className={styles.categoryColumn}>분류</th>
+                                  <th className={styles.dateColumn}>등록일시</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              {paginatedComplaints.length === 0 ? (
+                                  <tr>
+                                      <td colSpan="6" className={styles.emptyMessage}>
+                                          검색 결과가 없습니다.
+                                      </td>
+                                  </tr>
+                              ) : (
+                                  paginatedComplaints.map((complaint) => (
+                                      <tr key={complaint.id}>
+                                          <td className={styles.checkboxColumn}>
+                                              <input
+                                                  type="checkbox"
+                                                  checked={selectedItems.includes(complaint.id)}
+                                                  onChange={() => handleSelectItem(complaint.id)}
+                                              />
+                                          </td>
+                                          <td className={styles.numberColumn}>{complaint.number}</td>
+                                          <td className={styles.statusColumn}>
                         <span className={complaint.status === '미처리' ? styles.statusUnprocessed : styles.statusProcessed}>
                           {complaint.status}
                         </span>
-                      </td>
-                      <td className={styles.titleColumn}>{complaint.title}</td>
-                      <td className={styles.categoryColumn}>{complaint.category}</td>
-                      <td className={styles.dateColumn}>{complaint.date}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                                          </td>
+                                          <td className={styles.titleColumn}>{complaint.title}</td>
+                                          <td className={styles.categoryColumn}>{complaint.category}</td>
+                                          <td className={styles.dateColumn}>{complaint.date}</td>
+                                      </tr>
+                                  ))
+                              )}
+                              </tbody>
+                          </table>
+                      </div>
 
-          {/* 페이지네이션 */}
-          {renderPagination()}
-        </div>
-      </div>
-    </div>
+                      {/* 페이지네이션 */}
+                      {renderPagination()}
+                  </div>
+              </div>
+          </div>
+      </>
+
   );
 }
