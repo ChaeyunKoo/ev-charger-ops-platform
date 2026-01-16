@@ -17,6 +17,13 @@
   gap: 20px;
 }
 
+.mainFrame {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .title {
   font-family: Inter, Arial, sans-serif;
   font-style: normal;
@@ -28,7 +35,7 @@
   margin: 0;
 }
 
-.filters {
+.statusFilterTabs {
   display: flex;
   gap: 20px;
   justify-content: center;
@@ -36,7 +43,7 @@
   height: 38.79px;
 }
 
-.filterButton {
+.statusTab {
   font-family: Inter, Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
@@ -50,14 +57,213 @@
   transition: color 0.2s;
 }
 
-.filterButton:hover {
+.statusTab:hover {
   color: #2563eb;
 }
 
-.filterActive {
+.statusTabActive {
   font-weight: 600;
   color: #2563eb;
-  border-bottom: 2px solid #2563eb;
+}
+
+.searchSection {
+  background-color: #f9fafb;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.searchTypeGroup {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #333333;
+}
+
+.radioLabel input[type="radio"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.searchInput {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #333333;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #2563eb;
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.dateLabel {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #333333;
+  min-width: 40px;
+}
+
+.dateInputGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.dateInput {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #333333;
+  outline: none;
+  flex: 1;
+  max-width: 200px;
+}
+
+.dateInput:focus {
+  border-color: #2563eb;
+}
+
+.dateSeparator {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #666666;
+}
+
+.calendarButton {
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background-color 0.2s;
+}
+
+.calendarButton:hover {
+  background-color: #f5f5f5;
+}
+
+.categoryRow {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.categoryLabel {
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #333333;
+  min-width: 70px;
+}
+
+.categorySelect {
+  flex: 1;
+  max-width: 300px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #333333;
+  background-color: #ffffff;
+  cursor: pointer;
+  outline: none;
+}
+
+.categorySelect:focus {
+  border-color: #2563eb;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.73px;
+  color: #333333;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 40px;
+  color: #999999;
+  font-size: 14px;
 }
 
 .actionButtons {
@@ -312,5 +518,25 @@
   .searchButton,
   .resetButton {
     width: 100%;
+  }
+
+  .searchSection {
+    padding: 15px;
+  }
+
+  .searchRow,
+  .dateRow,
+  .categoryRow,
+  .statusRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .searchInput,
+  .dateInput,
+  .categorySelect {
+    width: 100%;
+    max-width: 100%;
   }
 }
