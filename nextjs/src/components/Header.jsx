@@ -7,13 +7,19 @@ import { usePathname } from "next/navigation";
 const NAV = [
     { label: "모니터링", href: "/pages/monitoring" },
     { label: "보고서", href: "/pages/report" },
-    { label: "민원처리", href: "/pages/complaints" },
+    { label: "민원처리", href: "/pages/Complaint" },
     { label: "Simulator", href: "/pages/simulator" },
 ];
 
 export default function Header() {
     const pathname = usePathname();
-    const isActive = (href) => pathname === href || pathname?.startsWith(href + "/");
+
+    // 수정된 로직: 현재 주소가 메뉴의 href로 시작하는지 확인
+    const isActive = (href) => {
+        if (!pathname) return false;
+        // 주소창이 '/pages/Complaint'로 시작하면 무조건 파란색!(ComplaintList, ComplaintDetail일 경우 둘 다 헤더의 '민원 처리'로 선택됨)
+        return pathname.startsWith(href);
+    };
 
     const HEADER_H = 86;
 
