@@ -1,21 +1,34 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/Header'; // 1. Header 컴포넌트 임포트
 import styles from './page.module.css';
 
+const INITIAL_FILTERS = {
+  searchKeyword: '',
+  startDate: '',
+  endDate: '',
+  complaintType: '',
+  showUnprocessed: true, // ✅ 전체 보이려면 둘 다 true
+  showProcessed: true,   // ✅
+};
+
 export default function ComplaintList() {
-  // 검색 필터 상태
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [complaintType, setComplaintType] = useState(''); // '충전기 고장' | '결제 오류' | 'AS 콜센터 연결 지연' | '기타' | ''
-  const [showUnprocessed, setShowUnprocessed] = useState(true); // 미처리 민원
-  const [showProcessed, setShowProcessed] = useState(false); // 처리된 민원
+  const router = useRouter();
+  /// ✅ 입력 중인 값(화면의 폼)
+  const [filters, setFilters] = useState(INITIAL_FILTERS);
+
+  // ✅ 실제 목록에 적용된 값(검색 버튼 눌렀을 때만 바뀜)
+  const [appliedFilters, setAppliedFilters] = useState(INITIAL_FILTERS);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [selectedItems, setSelectedItems] = useState([]);
+
+  const [modalMessage, setModalMessage] = useState(''); //중앙 메세지 모달 상태
+  const openModal = (msg) => setModalMessage(msg);
+  const closeModal = () => setModalMessage('');
 
   // 샘플 데이터 - 실제 데이터로 교체 필요
   const allComplaints = [
@@ -27,59 +40,64 @@ export default function ComplaintList() {
     { id: 6, title: '결제 문제', content: '결제 관련 문제가 있습니다', status: '처리완료', category: '결제 오류', date: '2024-01-10 10:30' },
   ];
 
-  // 필터링된 민원 목록
+  // ✅ “적용된 필터(appliedFilters)” 기준으로만 목록 필터링
   const filteredComplaints = useMemo(() => {
-    let filtered = [...allComplaints];
+    const {
+      searchKeyword,
+      startDate,
+      endDate,
+      complaintType,
+      showUnprocessed,
+      showProcessed,
+    } = appliedFilters;
 
-    // 상태 필터 (미처리/처리)
+    // ✅ 1) 최신순 정렬(먼저 정렬하고 그 다음 필터)
+    let list = [...allComplaints].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    // ✅ 2) 상태 필터
     if (showUnprocessed && showProcessed) {
-      // 둘 다 선택 시 전체 표시
+      // 전체
     } else if (showUnprocessed) {
-      filtered = filtered.filter(c => c.status === '미처리');
+      list = list.filter(c => c.status === '미처리');
     } else if (showProcessed) {
-      filtered = filtered.filter(c => c.status === '처리완료');
+      list = list.filter(c => c.status === '처리완료');
     } else {
-      filtered = [];
+      list = [];
     }
 
-    // 검색어 필터 (제목+내용만 사용)
+    // ✅ 3) 검색어(제목+내용)
     if (searchKeyword.trim()) {
       const kw = searchKeyword.toLowerCase();
-      filtered = filtered.filter(c =>
+      list = list.filter(c =>
         c.title.toLowerCase().includes(kw) || c.content.toLowerCase().includes(kw)
       );
     }
 
-    // 기간 필터
+    // ✅ 4) 기간
     if (startDate) {
-      filtered = filtered.filter(c => {
-        const complaintDate = new Date(c.date);
-        const start = new Date(startDate);
-        start.setHours(0, 0, 0, 0);
-        return complaintDate >= start;
-      });
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+      list = list.filter(c => new Date(c.date) >= start);
     }
-
     if (endDate) {
-      filtered = filtered.filter(c => {
-        const complaintDate = new Date(c.date);
-        const end = new Date(endDate);
-        end.setHours(23, 59, 59, 999);
-        return complaintDate <= end;
-      });
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      list = list.filter(c => new Date(c.date) <= end);
     }
 
-    // 민원 유형 필터
+    // ✅ 5) 민원 유형
     if (complaintType) {
-      filtered = filtered.filter(c => c.category === complaintType);
+      list = list.filter(c => c.category === complaintType);
     }
 
-    // 번호 재정렬 (1번부터)
-    return filtered.map((complaint, index) => ({
+    // ✅ 번호는 “필터+정렬 이후” 1부터
+    return list.map((complaint, index) => ({
       ...complaint,
-      number: index + 1
+      number: index + 1,
     }));
-  }, [searchKeyword, startDate, endDate, complaintType, showUnprocessed, showProcessed, allComplaints]);
+  }, [appliedFilters, allComplaints]);
 
   // 페이지네이션
   const paginatedComplaints = useMemo(() => {
@@ -92,37 +110,34 @@ export default function ComplaintList() {
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   const handleSearch = () => {
+    setAppliedFilters(filters); // ✅ 이때만 목록 변경
     setCurrentPage(1);
     setSelectedItems([]);
   };
 
   const handleReset = () => {
-    setSearchKeyword('');
-    setStartDate('');
-    setEndDate('');
-    setComplaintType('');
-    setShowUnprocessed(true);
-    setShowProcessed(false);
+    setFilters(INITIAL_FILTERS);        // ✅ 폼 초기화
+    setAppliedFilters(INITIAL_FILTERS); // ✅ 목록도 전체로
     setCurrentPage(1);
     setSelectedItems([]);
   };
 
   const handleStartDateChange = (e) => {
     const date = e.target.value;
-    if (date && endDate && new Date(date) > new Date(endDate)) {
-      alert('시작일은 종료일보다 늦을 수 없습니다.');
+    if (date && filters.endDate && new Date(date) > new Date(filters.endDate)) {
+      openModal('시작일은 종료일보다 늦을 수 없습니다.');
       return;
     }
-    setStartDate(date);
+    setFilters(prev => ({ ...prev, startDate: date }));
   };
 
   const handleEndDateChange = (e) => {
     const date = e.target.value;
-    if (date && startDate && new Date(date) < new Date(startDate)) {
-      alert('종료일은 시작일보다 이전일 수 없습니다.');
+    if (date && filters.startDate && new Date(date) < new Date(filters.startDate)) {
+      openModal('종료일은 시작일보다 이전일 수 없습니다.');
       return;
     }
-    setEndDate(date);
+    setFilters(prev => ({ ...prev, endDate: date }));
   };
 
   const handlePageChange = (page) => {
@@ -152,6 +167,10 @@ export default function ComplaintList() {
     }
     // Agent 처리 로직 구현
     console.log('선택된 민원 Agent 처리:', selectedItems);
+  };
+
+  const handleRowClick = (id) => {
+    router.push(`/pages/ComplaintDetail?id=${id}`);
   };
 
   const renderPagination = () => {
@@ -201,6 +220,21 @@ export default function ComplaintList() {
   return (
       <>
           <Header />
+
+          {/* ✅ 중앙 모달 (확인 버튼만) */}
+          {modalMessage && (
+            <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+              <div className={styles.modalBox}>
+                <div className={styles.modalMessage}>{modalMessage}</div>
+                <div className={styles.modalActions}>
+                  <button className={styles.modalConfirmButton} onClick={closeModal}>
+                    확인
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className={styles.container}>
               <div className={styles.wrapper}>
                   <div className={styles.mainFrame}>
@@ -214,8 +248,8 @@ export default function ComplaintList() {
                                   type="text"
                                   className={styles.searchInput}
                                   placeholder="검색어를 입력하세요"
-                                  value={searchKeyword}
-                                  onChange={(e) => setSearchKeyword(e.target.value)}
+                                  value={filters.searchKeyword}
+                                  onChange={(e) => setFilters(prev => ({ ...prev, searchKeyword: e.target.value }))}
                                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                               />
                           </div>
@@ -227,14 +261,14 @@ export default function ComplaintList() {
                                   <input
                                       type="date"
                                       className={styles.dateInput}
-                                      value={startDate}
+                                      value={filters.startDate}
                                       onChange={handleStartDateChange}
                                   />
                                   <span className={styles.dateSeparator}>~</span>
                                   <input
                                       type="date"
                                       className={styles.dateInput}
-                                      value={endDate}
+                                      value={filters.endDate}
                                       onChange={handleEndDateChange}
                                   />
                               </div>
@@ -245,8 +279,8 @@ export default function ComplaintList() {
                               <label className={styles.categoryLabel}>민원 유형:</label>
                               <select
                                   className={styles.categorySelect}
-                                  value={complaintType}
-                                  onChange={(e) => setComplaintType(e.target.value)}
+                                  value={filters.complaintType}
+                                  onChange={(e) => setFilters(prev => ({ ...prev, complaintType: e.target.value }))}
                               >
                                   <option value="">전체</option>
                                   <option value="충전기 고장">충전기 고장</option>
@@ -260,29 +294,31 @@ export default function ComplaintList() {
                           <div className={styles.statusRow}>
                               <label className={styles.checkboxLabel}>
                                   <input
-                                      type="checkbox"
-                                      checked={showUnprocessed}
-                                      onChange={(e) => {
-                                          setShowUnprocessed(e.target.checked);
-                                          if (!e.target.checked && !showProcessed) {
-                                              setShowProcessed(true);
-                                          }
-                                          setCurrentPage(1);
-                                      }}
+                                    type="checkbox"
+                                    checked={filters.showUnprocessed}
+                                    onChange={(e) => {
+                                      const checked = e.target.checked;
+                                      setFilters(prev => {
+                                        const next = { ...prev, showUnprocessed: checked };
+                                        if (!next.showUnprocessed && !next.showProcessed) next.showProcessed = true; // 최소 1개 유지
+                                        return next;
+                                      });
+                                    }}
                                   />
                                   <span>미처리된 민원</span>
                               </label>
                               <label className={styles.checkboxLabel}>
                                   <input
-                                      type="checkbox"
-                                      checked={showProcessed}
-                                      onChange={(e) => {
-                                          setShowProcessed(e.target.checked);
-                                          if (!e.target.checked && !showUnprocessed) {
-                                              setShowUnprocessed(true);
-                                          }
-                                          setCurrentPage(1);
-                                      }}
+                                    type="checkbox"
+                                    checked={filters.showProcessed}
+                                    onChange={(e) => {
+                                      const checked = e.target.checked;
+                                      setFilters(prev => {
+                                        const next = { ...prev, showProcessed: checked };
+                                        if (!next.showProcessed && !next.showUnprocessed) next.showUnprocessed = true;
+                                        return next;
+                                      });
+                                    }}
                                   />
                                   <span>처리된 민원</span>
                               </label>
@@ -347,11 +383,12 @@ export default function ComplaintList() {
                                   </tr>
                               ) : (
                                   paginatedComplaints.map((complaint) => (
-                                      <tr key={complaint.id}>
+                                      <tr key={complaint.id} onClick={() => handleRowClick(complaint.id)}>
                                           <td className={styles.checkboxColumn}>
                                               <input
                                                   type="checkbox"
                                                   checked={selectedItems.includes(complaint.id)}
+                                                  onClick={(e) => e.stopPropagation()}
                                                   onChange={() => handleSelectItem(complaint.id)}
                                               />
                                           </td>
