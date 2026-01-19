@@ -170,7 +170,7 @@ export default function ComplaintList() {
   };
 
   const handleRowClick = (id) => {
-    router.push(`/pages/ComplaintDetail?id=${id}`);
+    router.push(`/pages/ComplaintDetail/${id}`);
   };
 
   const renderPagination = () => {
