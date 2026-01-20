@@ -2,7 +2,7 @@
     --leftListMaxHeight: 320px;
 }
 
-/* ?꾩껜: 醫???2而щ읆 */
+/* 전체: 좌/우 2컬럼 */
 .dashboardGrid {
   display: grid;
   grid-template-columns: 360px 1fr 1fr 1fr;
@@ -10,13 +10,13 @@
   align-items: start;
 }
 
-/* ?쇱そ? 洹몃깷 1移몃쭔 */
+/* 왼쪽은 그냥 1칸만 */
 .leftPanel {
   grid-column: 1;
   grid-row: 2 / span 2;
 }
 
-/* ?ㅻⅨ履쎌뿉?쒕쭔 ???꾨옒 諛곗튂 */
+/* 오른쪽에서만 위/아래 배치 */
 .rightPanel {
   grid-column: 2;
   display: grid;
@@ -24,7 +24,7 @@
   gap: 20px;
 }
 
-/* ?ㅻⅨ履??? 3移?*/
+/* 오른쪽 위: 3칸 */
 .rightTop {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -32,21 +32,21 @@
   align-items: stretch;
 }
 
-/* ?ㅻⅨ履??꾨옒: 2移?*/
+/* 오른쪽 아래: 2칸 */
 .rightBottom {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-/* ??search.jsx ?대??먯꽌 ?꾪꽣 移대뱶 + 由ъ뒪??移대뱶 ?몃줈 ?ㅽ깮 */
+/* search.jsx 내부에서 필터 카드 + 리스트 카드 세로 스택 */
 .leftPanelStack {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-/* ?렓 ?몄쭛 紐⑤뱶 愿???ㅽ???*/
+/* 편집 모드 관련 스타일 */
 .editControls {
     display: flex;
     justify-content: flex-end;
