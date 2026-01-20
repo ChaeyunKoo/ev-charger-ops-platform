@@ -160,7 +160,11 @@ export default function MonitoringPage() {
             // 해당 위치에 컴포넌트 추가
             const newComponent = { ...component, gridArea };
             setLayout([...layout, newComponent]);
-            setRemovedComponents(removedComponents.filter(c => c.id !== componentToAdd));
+            
+            // 추가된 컴포넌트와 해당 gridArea를 차지하고 있던 빈 슬롯 모두 제거
+            setRemovedComponents(removedComponents.filter(c => 
+                c.id !== componentToAdd && c.gridArea !== gridArea
+            ));
         }
     };
 
