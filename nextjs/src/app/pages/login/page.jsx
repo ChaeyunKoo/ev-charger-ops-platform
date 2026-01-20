@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import styles from './page.module.css';
 import logoImage from './logo.png';
+import Header from '@/components/Header';
 
 export default function Login() {
   const [userId, setUserId] = useState('');

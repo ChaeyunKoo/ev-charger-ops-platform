@@ -1,0 +1,232 @@
+.container {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+}
+
+/* ✅ 전체 레이아웃 중앙 고정 + 좌우 여백 */
+.reportWrapper {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 20px;
+    box-sizing: border-box;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    border: 1px solid #d0d0d0;
+    padding: 20px;
+    height: fit-content;
+    box-sizing: border-box;
+}
+
+.sidebarTitle {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 23px;
+    color: #333333;
+    margin: 0 0 20px 0;
+}
+
+.reportTypeList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reportTypeButton {
+    width: 100%;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border: 1px solid #bdbdbd;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18.4px;
+    color: #333333;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.reportTypeButton:hover {
+    background-color: #f5f5f5;
+    border-color: #2196f3;
+}
+
+.active {
+    background-color: #2196f3;
+    color: #ffffff;
+    border-color: #2196f3;
+}
+
+.mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+.promptSection,
+.previewSection {
+    background-color: #ffffff;
+    border: 1px solid #d0d0d0;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.sectionTitle {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 23px;
+    color: #333333;
+    margin: 0 0 20px 0;
+}
+
+/* ✅ 프롬프트 입력: 내부 padding/box-sizing 보장 */
+.promptInput {
+    width: 100%;
+    min-height: 200px;
+    padding: 15px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16.1px;
+    color: #333333;
+    background-color: #ffffff;
+    border: 1px solid #bdbdbd;
+    box-sizing: border-box;
+    outline: none;
+    resize: vertical;
+    margin-bottom: 15px;
+}
+
+.promptInput:focus {
+    border-color: #2196f3;
+}
+
+.generateButton {
+    padding: 12px 30px;
+    background-color: #2196f3;
+    border: none;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18.4px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.generateButton:hover {
+    background-color: #1976d2;
+}
+
+.generateButton:active {
+    background-color: #1565c0;
+}
+
+.previewContent {
+    min-height: 300px;
+    padding: 20px;
+    background-color: #fafafa;
+    border: 1px solid #e0e0e0;
+    box-sizing: border-box;
+}
+
+.previewText {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333333;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.emptyPreview {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #757575;
+    text-align: left;
+    margin: 0;
+}
+
+/* ✅ 하단 액션버튼: 고정 높이/정렬/모양 통일 */
+.actionButtons {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    padding: 20px 0;
+}
+
+.actionButton {
+    height: 44px;
+    padding: 0 22px;
+    background-color: #2196f3;
+    border: none;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.actionButton:hover:not(:disabled) {
+    background-color: #1976d2;
+}
+
+.actionButton:active:not(:disabled) {
+    background-color: #1565c0;
+}
+
+.actionButton:disabled {
+    background-color: #bdbdbd;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* 모달 */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: #ffffff;
+    border: 1px solid #d0d0d0;
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    box-sizing: border-box;
+}
+
+.modalButtons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.modalButton {
+    height: 40px;
+    padding: 0 16px;
+    background-color: #2196f3;
+    border: none;
+    font-size: 14px;
+    color: #ffffff;
+    cursor: pointer;
+    white-space: nowrap;
+}
