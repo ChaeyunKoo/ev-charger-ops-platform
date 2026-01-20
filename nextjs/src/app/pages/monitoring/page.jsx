@@ -31,6 +31,21 @@ export default function MonitoringPage() {
 
     const [chatOpen, setChatOpen] = useState(false);
 
+    // 🎨 편집 모드 및 레이아웃 state
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [draggedItem, setDraggedItem] = useState(null);
+
+    // 📊 기본 레이아웃 설정 (그리드 위치: row/col로 관리)
+    const defaultLayout = [
+        { id: "chart1", component: "UnconfirmStatusChart", title: "상태미확인 충전기 현황", gridArea: "2 / 2 / 3 / 3" },
+        { id: "chart2", component: "UnconfirmRegionChart", title: "지역별 상태 미확인 비율", gridArea: "2 / 3 / 3 / 4" },
+        { id: "chart3", component: "SummaryChart", title: "충전기 상태 현황", gridArea: "2 / 4 / 3 / 5" },
+        { id: "list1", component: "PagedList", title: "이상탐지 위험 충전소 리스트", dataKey: "risk", gridArea: "3 / 2 / 4 / 4" },
+        { id: "list2", component: "PagedList", title: "상태 미확인 충전소 리스트", dataKey: "unconfirmed", gridArea: "3 / 4 / 4 / 5" },
+    ];
+
+    const [layout, setLayout] = useState(defaultLayout);
+
     // 더미
     const stationList = useMemo(
         () => [
@@ -78,6 +93,133 @@ export default function MonitoringPage() {
         alert("알림 전송(임시) - API 연결 시 실제 전송 로직으로 교체");
     };
 
+    // 🎨 드래그 앤 드롭 핸들러
+    const handleDragStart = (e, item) => {
+        if (!isEditMode) return;
+        setDraggedItem(item);
+        e.dataTransfer.effectAllowed = "move";
+    };
+
+    const handleDragOver = (e) => {
+        if (!isEditMode) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+    };
+
+    const handleDrop = (e, targetItem) => {
+        if (!isEditMode || !draggedItem || draggedItem.id === targetItem.id) {
+            setDraggedItem(null);
+            return;
+        }
+        e.preventDefault();
+
+        // 위치 교환
+        const newLayout = layout.map(item => {
+            if (item.id === draggedItem.id) {
+                return { ...item, gridArea: targetItem.gridArea };
+            }
+            if (item.id === targetItem.id) {
+                return { ...item, gridArea: draggedItem.gridArea };
+            }
+            return item;
+        });
+
+        setLayout(newLayout);
+        setDraggedItem(null);
+    };
+
+    const handleResetLayout = () => {
+        if (window.confirm("레이아웃을 초기화하시겠습니까?")) {
+            setLayout(defaultLayout);
+        }
+    };
+
+    // 📦 컴포넌트 렌더링
+    const renderComponent = (item) => {
+        const cardClass = isEditMode ? `${styles.card} ${styles.draggableCard}` : styles.card;
+        const cardStyle = { gridArea: item.gridArea };
+
+        if (item.component === "UnconfirmStatusChart") {
+            return (
+                <section
+                    key={item.id}
+                    className={cardClass}
+                    style={cardStyle}
+                    draggable={isEditMode}
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, item)}
+                >
+                    {isEditMode && <div className={styles.dragHint}>드래그하여 이동</div>}
+                    <h3 className={styles.cardTitle}>{item.title}</h3>
+                    <UnconfirmStatusChart />
+                </section>
+            );
+        }
+
+        if (item.component === "UnconfirmRegionChart") {
+            return (
+                <section
+                    key={item.id}
+                    className={cardClass}
+                    style={cardStyle}
+                    draggable={isEditMode}
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, item)}
+                >
+                    {isEditMode && <div className={styles.dragHint}>드래그하여 이동</div>}
+                    <h3 className={styles.cardTitle}>{item.title}</h3>
+                    <UnconfirmRegionChart />
+                </section>
+            );
+        }
+
+        if (item.component === "SummaryChart") {
+            return (
+                <section
+                    key={item.id}
+                    className={cardClass}
+                    style={cardStyle}
+                    draggable={isEditMode}
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, item)}
+                >
+                    {isEditMode && <div className={styles.dragHint}>드래그하여 이동</div>}
+                    <h3 className={styles.cardTitle}>{item.title}</h3>
+                    <SummaryChart total={152} />
+                </section>
+            );
+        }
+
+        if (item.component === "PagedList") {
+            const isRisk = item.dataKey === "risk";
+            const items = isRisk ? riskStations : unconfirmedStations;
+
+            return (
+                <div
+                    key={item.id}
+                    className={cardClass}
+                    style={cardStyle}
+                    draggable={isEditMode}
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, item)}
+                >
+                    {isEditMode && <div className={styles.dragHint}>드래그하여 이동</div>}
+                    <PagedList
+                        styles={styles}
+                        title={item.title}
+                        items={items}
+                        pageSize={5}
+                        onView={goDetail}
+                    />
+                </div>
+            );
+        }
+    };
+
     return (
         <div className={styles.page}>
             <Header />
@@ -85,6 +227,7 @@ export default function MonitoringPage() {
             <main className={styles.main}>
                 <div className={styles.inner}>
                     <div className={styles.dashboardGrid}>
+                        {/* 왼쪽 검색 패널 (고정) */}
                         <div className={styles.leftPanel}>
                             <Search
                                 styles={styles}
@@ -106,37 +249,26 @@ export default function MonitoringPage() {
                             />
                         </div>
 
-                        <section className={styles.card}>
-                            <h3 className={styles.cardTitle}>상태미확인 충전기 현황</h3>
-                            <UnconfirmStatusChart />
-                        </section>
+                        {/* 🎨 편집 컨트롤 버튼들 */}
+                        <div className={styles.editControls}>
+                            {isEditMode && (
+                                <button
+                                    className={styles.resetBtn}
+                                    onClick={handleResetLayout}
+                                >
+                                    초기화
+                                </button>
+                            )}
+                            <button
+                                className={`${styles.editBtn} ${isEditMode ? styles.active : ''}`}
+                                onClick={() => setIsEditMode(!isEditMode)}
+                            >
+                                {isEditMode ? "완료" : "편집"}
+                            </button>
+                        </div>
 
-                        <section className={styles.card}>
-                            <h3 className={styles.cardTitle}>지역별 상태 미확인 비율</h3>
-                            <UnconfirmRegionChart />
-                        </section>
-
-                        <section className={styles.card}>
-                            <h3 className={styles.cardTitle}>충전기 상태 현황</h3>
-                            <SummaryChart total={152} />
-                        </section>
-
-
-                        <PagedList
-                            styles={styles}
-                            title="이상탐지 위험 충전소 리스트"
-                            items={riskStations}
-                            pageSize={5}
-                            onView={goDetail}
-                        />
-
-                        <PagedList
-                            styles={styles}
-                            title="상태 미확인 충전소 리스트"
-                            items={unconfirmedStations}
-                            pageSize={5}
-                            onView={goDetail}
-                        />
+                        {/* 📊 동적 레이아웃 렌더링 */}
+                        {layout.map(item => renderComponent(item))}
 
                         <div className={styles.gridEmpty} />
                     </div>

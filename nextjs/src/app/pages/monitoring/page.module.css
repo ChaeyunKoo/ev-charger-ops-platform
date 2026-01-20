@@ -26,6 +26,69 @@
 .gridEmpty {
     /* 비워둬도 됨 */
 }
+
+/* 🎨 편집 모드 관련 스타일 */
+.editControls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 16px;
+    grid-column: 2 / -1;
+}
+
+.editBtn,
+.resetBtn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+}
+
+.editBtn {
+    background: #2196f3;
+}
+
+.editBtn.active {
+    background: #4caf50;
+}
+
+.resetBtn {
+    background: #ff5722;
+}
+
+.draggableCard {
+    position: relative;
+    cursor: move;
+    border: 2px dashed #2196f3 !important;
+    transition: all 0.2s;
+}
+
+.draggableCard:hover {
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.dragHint {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #2196f3;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    z-index: 10;
+}
+
+.contentGrid {
+    display: contents;
+}
 .page {
     height: 100dvh;
     overflow: hidden;
