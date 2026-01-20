@@ -1,39 +1,59 @@
-:root {
+﻿:root {
     --leftListMaxHeight: 320px;
 }
-/* ✅ 좌측(필터+리스트) + 우측(차트/리스트) 한 번에 배치 */
+
+/* ?꾩껜: 醫???2而щ읆 */
 .dashboardGrid {
-    display: grid;
-    grid-template-columns: 360px 1fr 1fr 1fr; /* 좌측 폭은 필요하면 조정 */
-    gap: 24px;
-    align-items: start;
+  display: grid;
+  grid-template-columns: 360px 1fr 1fr 1fr;
+  gap: 20px;
+  align-items: start;
 }
 
-/* ✅ 좌측 패널이 2행(span 2)을 차지 */
+/* ?쇱そ? 洹몃깷 1移몃쭔 */
 .leftPanel {
-    grid-column: 1;
-    grid-row: 1 / span 2;
+  grid-column: 1;
+  grid-row: 2 / span 2;
 }
 
-/* ✅ search.jsx 내부에서 필터 카드 + 리스트 카드 세로 스택 */
+/* ?ㅻⅨ履쎌뿉?쒕쭔 ???꾨옒 諛곗튂 */
+.rightPanel {
+  grid-column: 2;
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 20px;
+}
+
+/* ?ㅻⅨ履??? 3移?*/
+.rightTop {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* ?ㅻⅨ履??꾨옒: 2移?*/
+.rightBottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* ??search.jsx ?대??먯꽌 ?꾪꽣 移대뱶 + 由ъ뒪??移대뱶 ?몃줈 ?ㅽ깮 */
 .leftPanelStack {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-/* ✅ 하단 4번째 칸 비우기 */
-.gridEmpty {
-    /* 비워둬도 됨 */
-}
-
-/* 🎨 편집 모드 관련 스타일 */
+/* ?렓 ?몄쭛 紐⑤뱶 愿???ㅽ???*/
 .editControls {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 0;
     grid-column: 2 / -1;
+    grid-row: 1;
 }
 
 .editBtn,
@@ -125,7 +145,7 @@
 
 .topGrid {
     display: grid;
-    grid-template-columns: 340px 1fr 1fr 1fr;
+    grid-template-columns: 360px 1fr 1fr 1fr;
     gap: 20px;
     align-items: stretch;
 }
@@ -133,7 +153,7 @@
 .bottomGrid {
     margin-top: 20px;
     display: grid;
-    grid-template-columns: 340px 1fr 1fr;
+    grid-template-columns: 360px 1fr 1fr;
     gap: 20px;
 }
 
@@ -433,3 +453,5 @@
         grid-template-columns: 1fr;
     }
 }
+
+

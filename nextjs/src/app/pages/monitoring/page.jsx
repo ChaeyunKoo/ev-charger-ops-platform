@@ -40,8 +40,8 @@ export default function MonitoringPage() {
         { id: "chart1", component: "UnconfirmStatusChart", title: "상태미확인 충전기 현황", gridArea: "2 / 2 / 3 / 3" },
         { id: "chart2", component: "UnconfirmRegionChart", title: "지역별 상태 미확인 비율", gridArea: "2 / 3 / 3 / 4" },
         { id: "chart3", component: "SummaryChart", title: "충전기 상태 현황", gridArea: "2 / 4 / 3 / 5" },
-        { id: "list1", component: "PagedList", title: "이상탐지 위험 충전소 리스트", dataKey: "risk", gridArea: "3 / 2 / 4 / 4" },
-        { id: "list2", component: "PagedList", title: "상태 미확인 충전소 리스트", dataKey: "unconfirmed", gridArea: "3 / 4 / 4 / 5" },
+        { id: "list1", component: "PagedList", title: "이상탐지 위험 충전소 리스트", dataKey: "risk", gridArea: "3 / 2 / 4 / 3" },
+        { id: "list2", component: "PagedList", title: "상태 미확인 충전소 리스트", dataKey: "unconfirmed", gridArea: "3 / 3 / 4 / 4" },
     ];
 
     const [layout, setLayout] = useState(defaultLayout);
