@@ -295,50 +295,56 @@ export default function MonitoringPage() {
     };
 
     // 🔲 빈 슬롯 렌더링
-    const renderEmptySlot = (gridArea) => {
-        const selectedComponent = emptySlotSelections[gridArea] || "";
+    const renderEmptySlot = (removedComp) => {
+        const { id, gridArea, title } = removedComp;
+        const selectedComponent = emptySlotSelections[id] || "";
 
         return (
             <div
-                key={`empty-${gridArea}`}
+                key={`empty-${id}`}
                 className={styles.emptySlot}
                 style={{ gridArea }}
             >
                 <p className={styles.emptySlotText}>비어있는 공간</p>
+                <p className={styles.emptySlotText} style={{ fontSize: '11px', color: '#bbb', marginTop: '-8px' }}>
+                    (원래: {title})
+                </p>
                 {removedComponents.length > 0 && (
-                    <div className={styles.componentSelector}>
-                        <select
-                            className={styles.selectorDropdown}
-                            value={selectedComponent}
-                            onChange={(e) => {
-                                setEmptySlotSelections({
-                                    ...emptySlotSelections,
-                                    [gridArea]: e.target.value
-                                });
-                            }}
-                        >
-                            <option value="">컴포넌트 선택</option>
-                            {removedComponents.map(comp => (
-                                <option key={comp.id} value={comp.id}>
-                                    {comp.title}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                )}
-                {selectedComponent && (
-                    <button
-                        className={styles.addBtn}
-                        onClick={() => {
-                            handleAddComponent(gridArea, selectedComponent);
-                            // 선택 초기화
-                            const newSelections = { ...emptySlotSelections };
-                            delete newSelections[gridArea];
-                            setEmptySlotSelections(newSelections);
-                        }}
-                    >
-                        추가
-                    </button>
+                    <>
+                        <div className={styles.componentSelector}>
+                            <select
+                                className={styles.selectorDropdown}
+                                value={selectedComponent}
+                                onChange={(e) => {
+                                    setEmptySlotSelections({
+                                        ...emptySlotSelections,
+                                        [id]: e.target.value
+                                    });
+                                }}
+                            >
+                                <option value="">컴포넌트 선택</option>
+                                {removedComponents.map(comp => (
+                                    <option key={comp.id} value={comp.id}>
+                                        {comp.title}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        {selectedComponent && (
+                            <button
+                                className={styles.addBtn}
+                                onClick={() => {
+                                    handleAddComponent(gridArea, selectedComponent);
+                                    // 선택 초기화
+                                    const newSelections = { ...emptySlotSelections };
+                                    delete newSelections[id];
+                                    setEmptySlotSelections(newSelections);
+                                }}
+                            >
+                                추가
+                            </button>
+                        )}
+                    </>
                 )}
             </div>
         );
@@ -398,10 +404,8 @@ export default function MonitoringPage() {
                                 {layout.map(item => renderComponent(item))}
                                 
                                 {/* 삭제된 컴포넌트의 빈 슬롯 (편집 모드에서만 표시) */}
-                                {availableComponents
-                                    .filter(comp => !layout.find(item => item.id === comp.id))
-                                    .map(comp => renderEmptySlot(comp.gridArea))
-                                }
+                                {/* 삭제 당시의 실제 위치(gridArea)를 사용 */}
+                                {removedComponents.map(comp => renderEmptySlot(comp))}
                             </>
                         ) : (
                             /* 일반 모드: 현재 레이아웃만 표시 */
