@@ -151,21 +151,31 @@ export default function MonitoringPage() {
     };
 
     // ➕ 컴포넌트 추가 (빈 공간에)
-    const handleAddComponent = (gridArea, componentToAdd) => {
-        if (!componentToAdd) return;
+    const handleAddComponent = (targetGridArea, componentToAddId) => {
+        if (!componentToAddId) return;
 
-        // 제거된 컴포넌트 목록에서 찾기
-        const component = removedComponents.find(c => c.id === componentToAdd);
-        if (component) {
-            // 해당 위치에 컴포넌트 추가
-            const newComponent = { ...component, gridArea };
-            setLayout([...layout, newComponent]);
-            
-            // 추가된 컴포넌트와 해당 gridArea를 차지하고 있던 빈 슬롯 모두 제거
-            setRemovedComponents(removedComponents.filter(c => 
-                c.id !== componentToAdd && c.gridArea !== gridArea
-            ));
-        }
+        // 추가할 컴포넌트 찾기
+        const componentToAdd = removedComponents.find(c => c.id === componentToAddId);
+        // 타겟 위치에 있던 컴포넌트 찾기 (빈 슬롯)
+        const targetSlot = removedComponents.find(c => c.gridArea === targetGridArea);
+        
+        if (!componentToAdd || !targetSlot) return;
+
+        // 위치 교환
+        // 1. 추가할 컴포넌트를 레이아웃에 타겟 위치로 추가
+        const newComponent = { ...componentToAdd, gridArea: targetGridArea };
+        setLayout([...layout, newComponent]);
+        
+        // 2. 타겟 슬롯의 컴포넌트를 제거된 목록에서 추가할 컴포넌트가 있던 위치로 이동
+        const updatedRemovedComponents = removedComponents.map(c => {
+            if (c.id === targetSlot.id) {
+                // 타겟 슬롯을 추가할 컴포넌트가 있던 위치로 이동
+                return { ...c, gridArea: componentToAdd.gridArea };
+            }
+            return c;
+        }).filter(c => c.id !== componentToAddId); // 추가된 컴포넌트는 제거
+        
+        setRemovedComponents(updatedRemovedComponents);
     };
 
     // 📦 컴포넌트 렌더링
