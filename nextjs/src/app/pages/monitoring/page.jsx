@@ -44,7 +44,12 @@ export default function MonitoringPage() {
         { id: "list2", component: "PagedList", title: "상태 미확인 충전소 리스트", dataKey: "unconfirmed", gridArea: "3 / 3 / 4 / 4" },
     ];
 
+    // 전체 사용 가능한 컴포넌트 목록 (고정)
+    const availableComponents = useMemo(() => defaultLayout, []);
+
     const [layout, setLayout] = useState(defaultLayout);
+    const [removedComponents, setRemovedComponents] = useState([]);
+    const [emptySlotSelections, setEmptySlotSelections] = useState({});
 
     // 더미
     const stationList = useMemo(
@@ -131,6 +136,31 @@ export default function MonitoringPage() {
     const handleResetLayout = () => {
         if (window.confirm("레이아웃을 초기화하시겠습니까?")) {
             setLayout(defaultLayout);
+            setRemovedComponents([]);
+            setEmptySlotSelections({});
+        }
+    };
+
+    // 🗑️ 컴포넌트 삭제
+    const handleRemoveComponent = (itemId) => {
+        const removedItem = layout.find(item => item.id === itemId);
+        if (removedItem) {
+            setLayout(layout.filter(item => item.id !== itemId));
+            setRemovedComponents([...removedComponents, removedItem]);
+        }
+    };
+
+    // ➕ 컴포넌트 추가 (빈 공간에)
+    const handleAddComponent = (gridArea, componentToAdd) => {
+        if (!componentToAdd) return;
+
+        // 제거된 컴포넌트 목록에서 찾기
+        const component = removedComponents.find(c => c.id === componentToAdd);
+        if (component) {
+            // 해당 위치에 컴포넌트 추가
+            const newComponent = { ...component, gridArea };
+            setLayout([...layout, newComponent]);
+            setRemovedComponents(removedComponents.filter(c => c.id !== componentToAdd));
         }
     };
 
@@ -150,7 +180,18 @@ export default function MonitoringPage() {
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, item)}
                 >
-                    {isEditMode && <div className={styles.dragHint}>드래그하여 이동</div>}
+                    {isEditMode && (
+                        <>
+                            <button
+                                className={styles.deleteBtn}
+                                onClick={() => handleRemoveComponent(item.id)}
+                                title="삭제"
+                            >
+                                ×
+                            </button>
+                            <div className={styles.dragHint}>드래그하여 이동</div>
+                        </>
+                    )}
                     <h3 className={styles.cardTitle}>{item.title}</h3>
                     <UnconfirmStatusChart />
                 </section>
@@ -168,7 +209,18 @@ export default function MonitoringPage() {
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, item)}
                 >
-                    {isEditMode && <div className={styles.dragHint}>드래그하여 이동</div>}
+                    {isEditMode && (
+                        <>
+                            <button
+                                className={styles.deleteBtn}
+                                onClick={() => handleRemoveComponent(item.id)}
+                                title="삭제"
+                            >
+                                ×
+                            </button>
+                            <div className={styles.dragHint}>드래그하여 이동</div>
+                        </>
+                    )}
                     <h3 className={styles.cardTitle}>{item.title}</h3>
                     <UnconfirmRegionChart />
                 </section>
@@ -186,7 +238,18 @@ export default function MonitoringPage() {
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, item)}
                 >
-                    {isEditMode && <div className={styles.dragHint}>드래그하여 이동</div>}
+                    {isEditMode && (
+                        <>
+                            <button
+                                className={styles.deleteBtn}
+                                onClick={() => handleRemoveComponent(item.id)}
+                                title="삭제"
+                            >
+                                ×
+                            </button>
+                            <div className={styles.dragHint}>드래그하여 이동</div>
+                        </>
+                    )}
                     <h3 className={styles.cardTitle}>{item.title}</h3>
                     <SummaryChart total={152} />
                 </section>
@@ -207,7 +270,18 @@ export default function MonitoringPage() {
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, item)}
                 >
-                    {isEditMode && <div className={styles.dragHint}>드래그하여 이동</div>}
+                    {isEditMode && (
+                        <>
+                            <button
+                                className={styles.deleteBtn}
+                                onClick={() => handleRemoveComponent(item.id)}
+                                title="삭제"
+                            >
+                                ×
+                            </button>
+                            <div className={styles.dragHint}>드래그하여 이동</div>
+                        </>
+                    )}
                     <PagedList
                         styles={styles}
                         title={item.title}
@@ -218,6 +292,56 @@ export default function MonitoringPage() {
                 </div>
             );
         }
+    };
+
+    // 🔲 빈 슬롯 렌더링
+    const renderEmptySlot = (gridArea) => {
+        const selectedComponent = emptySlotSelections[gridArea] || "";
+
+        return (
+            <div
+                key={`empty-${gridArea}`}
+                className={styles.emptySlot}
+                style={{ gridArea }}
+            >
+                <p className={styles.emptySlotText}>비어있는 공간</p>
+                {removedComponents.length > 0 && (
+                    <div className={styles.componentSelector}>
+                        <select
+                            className={styles.selectorDropdown}
+                            value={selectedComponent}
+                            onChange={(e) => {
+                                setEmptySlotSelections({
+                                    ...emptySlotSelections,
+                                    [gridArea]: e.target.value
+                                });
+                            }}
+                        >
+                            <option value="">컴포넌트 선택</option>
+                            {removedComponents.map(comp => (
+                                <option key={comp.id} value={comp.id}>
+                                    {comp.title}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+                {selectedComponent && (
+                    <button
+                        className={styles.addBtn}
+                        onClick={() => {
+                            handleAddComponent(gridArea, selectedComponent);
+                            // 선택 초기화
+                            const newSelections = { ...emptySlotSelections };
+                            delete newSelections[gridArea];
+                            setEmptySlotSelections(newSelections);
+                        }}
+                    >
+                        추가
+                    </button>
+                )}
+            </div>
+        );
     };
 
     return (
@@ -268,7 +392,21 @@ export default function MonitoringPage() {
                         </div>
 
                         {/* 📊 동적 레이아웃 렌더링 */}
-                        {layout.map(item => renderComponent(item))}
+                        {isEditMode ? (
+                            <>
+                                {/* 현재 레이아웃의 컴포넌트들 */}
+                                {layout.map(item => renderComponent(item))}
+                                
+                                {/* 삭제된 컴포넌트의 빈 슬롯 (편집 모드에서만 표시) */}
+                                {availableComponents
+                                    .filter(comp => !layout.find(item => item.id === comp.id))
+                                    .map(comp => renderEmptySlot(comp.gridArea))
+                                }
+                            </>
+                        ) : (
+                            /* 일반 모드: 현재 레이아웃만 표시 */
+                            layout.map(item => renderComponent(item))
+                        )}
 
                         <div className={styles.gridEmpty} />
                     </div>

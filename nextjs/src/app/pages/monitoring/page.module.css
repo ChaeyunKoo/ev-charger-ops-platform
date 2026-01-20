@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --leftListMaxHeight: 320px;
 }
 
@@ -104,6 +104,88 @@
     font-size: 10px;
     font-weight: 700;
     z-index: 10;
+}
+
+.deleteBtn {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 28px;
+    height: 28px;
+    background: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.deleteBtn:hover {
+    background: #d32f2f;
+    transform: scale(1.1);
+}
+
+.emptySlot {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    background: #f9f9f9;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 200px;
+}
+
+.addBtn {
+    padding: 12px 24px;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.addBtn:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.componentSelector {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+}
+
+.selectorDropdown {
+    width: 100%;
+    padding: 8px 12px;
+    background: #fff;
+    border: 2px solid #4caf50;
+    border-radius: 6px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+}
+
+.emptySlotText {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #999;
+    text-align: center;
 }
 
 .contentGrid {
