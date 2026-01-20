@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 import {
     Box,
@@ -17,15 +18,42 @@ export default function Page() {
     const router = useRouter();
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isLoading) return;
 
-        console.log("로그인 시도:", { userId, password });
+        const employeeNum = userId.trim();
+        const pw = password;
 
-        // 예시: 로그인 성공 처리
-        router.push("/pages/monitoring");
-        router.refresh();
+        if (!employeeNum) {
+            alert("사용자ID를 입력해주세요.");
+            return;
+        }
+        if (!pw) {
+            alert("비밀번호를 입력해주세요.");
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            await axios.post(
+                "/api/authApi/login",
+                { employeeNum, password: pw },
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            router.push("/pages/monitoring");
+            router.refresh(); // 너 말대로 일단 유지
+        } catch (err) {
+            const msg =
+                err?.response?.data?.message ||
+                err?.message ||
+                "로그인에 실패했습니다.";
+            alert(msg);
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -42,36 +70,27 @@ export default function Page() {
             <Paper
                 elevation={0}
                 sx={{
-                    // ✅ 카드 폭 키움 (420 → 560)
                     width: "min(560px, 94vw)",
                     border: "1px solid #e6e6e6",
                     borderRadius: 1,
-                    // ✅ 여백 키움 (p:4 → p:5)
                     p: 5,
                 }}
             >
-                {/* 상단 로고/타이틀 */}
                 <Box sx={{ textAlign: "center", mb: 3.5 }}>
                     <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
                         <Image
                             src="/logo.png"
                             alt="한국환경공단 로고"
                             priority
-                            width={210}
-                            height={48}
+                            width={220}
+                            height={50}
                         />
                     </Box>
-
-                    {/* ✅ 글씨 크게 */}
-                    <Typography sx={{ fontWeight: 800, fontSize: 22, color: "#111" }}>
-                        한국환경공단
-                    </Typography>
-                    <Typography sx={{ fontSize: 14, color: "#666", mt: 0.8 }}>
+                    <Typography sx={{ fontSize: 12, color: "#666", mt: 0.8 }}>
                         Korea Environment Corporation
                     </Typography>
                 </Box>
 
-                {/* 폼 */}
                 <Box component="form" onSubmit={handleSubmit}>
                     <TextField
                         fullWidth
@@ -82,7 +101,6 @@ export default function Page() {
                             mb: 2,
                             "& .MuiOutlinedInput-root": {
                                 borderRadius: 0.7,
-                                // ✅ 인풋 높이 크게
                                 height: 56,
                                 fontSize: 16,
                             },
@@ -111,17 +129,21 @@ export default function Page() {
                         type="submit"
                         fullWidth
                         variant="contained"
+                        disabled={isLoading}
                         sx={{
-                            // ✅ 버튼 크게
                             height: 56,
                             borderRadius: 0.7,
                             fontWeight: 800,
                             fontSize: 16,
                             backgroundColor: "#1b6fff",
                             "&:hover": { backgroundColor: "#135fe0" },
+                            "&.Mui-disabled": {
+                                backgroundColor: "#9bbcff",
+                                color: "#fff",
+                            },
                         }}
                     >
-                        로그인
+                        {isLoading ? "로그인 중..." : "로그인"}
                     </Button>
 
                     <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2.5 }}>
@@ -131,6 +153,7 @@ export default function Page() {
                             underline="none"
                             sx={{ fontSize: 13, color: "#1b6fff", fontWeight: 600 }}
                             onClick={() => router.push("/pages/signup")}
+                            disabled={isLoading}
                         >
                             회원가입
                         </MuiLink>
