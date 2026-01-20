@@ -1,0 +1,372 @@
+:root {
+    --leftListMaxHeight: 320px;
+}
+/* ✅ 좌측(필터+리스트) + 우측(차트/리스트) 한 번에 배치 */
+.dashboardGrid {
+    display: grid;
+    grid-template-columns: 360px 1fr 1fr 1fr; /* 좌측 폭은 필요하면 조정 */
+    gap: 24px;
+    align-items: start;
+}
+
+/* ✅ 좌측 패널이 2행(span 2)을 차지 */
+.leftPanel {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+}
+
+/* ✅ search.jsx 내부에서 필터 카드 + 리스트 카드 세로 스택 */
+.leftPanelStack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ✅ 하단 4번째 칸 비우기 */
+.gridEmpty {
+    /* 비워둬도 됨 */
+}
+.page {
+    height: 100dvh;
+    overflow: hidden;
+    background: #fff;
+}
+
+.main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 28px 24px;
+}
+
+.inner {
+    width: 100%;
+    max-width: 1400px;
+}
+
+.card {
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    background: #fff;
+    padding: 16px;
+}
+
+.cardTitle {
+    font-family: Inter, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin: 0 0 14px;
+}
+
+.topGrid {
+    display: grid;
+    grid-template-columns: 340px 1fr 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.bottomGrid {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 340px 1fr 1fr;
+    gap: 20px;
+}
+
+.filterSection {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.filterGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: #333;
+}
+
+.row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.select,
+.selectFull,
+.stationNameInput {
+    height: 34px;
+    padding: 0 12px;
+    background: #fff;
+    border: 1px solid #d6d6d6;
+    border-radius: 6px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #666;
+}
+
+.select,
+.selectFull {
+    width: 100%;
+}
+
+.stationNameInput {
+    width: 100%;
+}
+
+.typeBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.btnRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 2px;
+}
+
+.primaryBtn {
+    height: 40px;
+    background: #1b6fff;
+    border: none;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(27, 111, 255, 0.25);
+}
+
+.ghostBtn {
+    height: 40px;
+    background: #fff;
+    border: 1px solid #d6d6d6;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: #111;
+    cursor: pointer;
+}
+
+
+.subTitle {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    color: #333;
+    margin: 0 0 10px;
+}
+
+.leftList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: var(--leftListMaxHeight);
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+.leftList::-webkit-scrollbar {
+    width: 8px;
+}
+.leftList::-webkit-scrollbar-thumb {
+    background: #cfcfcf;
+    border-radius: 999px;
+}
+.leftList::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.stationRow {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stationName {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #333;
+    flex: 1;
+}
+
+
+.badgeStatus {
+    min-width: 54px;
+    height: 30px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    color: #fff;
+    padding: 0 8px;
+    white-space: nowrap;
+}
+
+.badgeAvailable { background: #2196f3; }
+.badgeUsing { background: #2e7d32; }
+.badgeUnknown { background: #f59e0b; }
+
+.badgeType {
+    min-width: 45px;
+    height: 30px;
+    background: #e0e0e0;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    color: #000;
+    padding: 0 8px;
+    white-space: nowrap;
+}
+
+.listTitle {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #111;
+    text-align: center;
+    margin: 0 0 12px;
+}
+
+.listBody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.listItemRow {
+    height: 44px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #efefef;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.listItemText {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #333;
+}
+
+.viewBtn {
+    width: 44px;
+    height: 24px;
+    background: #fff;
+    border: 2px solid #1b6fff;
+    border-radius: 999px;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    color: #1b6fff;
+    cursor: pointer;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 8px;
+    margin-top: 12px;
+    user-select: none;
+}
+
+.pageArrow {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+}
+
+.pageArrow:disabled {
+    color: #ccc;
+    cursor: default;
+}
+
+.pageBtn {
+    border: none;
+    background: transparent;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+}
+
+.pageBtnActive {
+    color: #1b6fff;
+    font-weight: 900;
+    font-style: italic;
+}
+
+.pageDots {
+    color: #666;
+    font-size: 12px;
+}
+
+.fixedButtons {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.chatBtn {
+    width: 79px;
+    height: 60px;
+    background: #1b6fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Noto Sans KR", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.alarmBtn {
+    padding: 16px 32px;
+    background: #1b6fff;
+    border: none;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 6px 16px rgba(27, 111, 255, 0.25);
+}
+
+@media (max-width: 1200px) {
+    .topGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .bottomGrid {
+        grid-template-columns: 1fr;
+    }
+}

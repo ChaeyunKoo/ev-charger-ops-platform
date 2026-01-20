@@ -1,68 +1,164 @@
 "use client";
 
 import { useState } from "react";
-import Header from '@/components/Header';
+import Header from "@/app/components/Header";
 import styles from "./page.module.css";
+
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
+import reportApi from "@/app/api/reportApi";
 
 export default function Report() {
     const [selectedReportType, setSelectedReportType] = useState("");
     const [prompt, setPrompt] = useState("");
-    const [reportPreview, setReportPreview] = useState("");
-    const [showDownloadConfirm, setShowDownloadConfirm] = useState(false);
-    const [showResetConfirm, setShowResetConfirm] = useState(false);
-    const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+
+    // 서버가 준 PDF 경로(프론트 도메인 기준 /files/... 형태)
+    const [filePath, setFilePath] = useState("");
+
+    // UI 상태
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [openDownload, setOpenDownload] = useState(false);
+
+    // 파일 없을때 오류
+    const [openError, setOpenError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
     const handleReportTypeSelect = (type) => {
         setSelectedReportType(type);
 
-        if (type === "audit") {
-            setPrompt("감사용 보고서 예시 프롬포트...");
-        } else if (type === "monthly") {
-            setPrompt("월별 보고서 예시 프롬포트...");
-        } else if (type === "custom") {
-            setPrompt("맞춤 보고서 기본 프롬포트 형식...");
-        }
+        if (type === "audit") setPrompt("감사용 보고서 예시 프롬포트...");
+        else if (type === "monthly") setPrompt("월별 보고서 예시 프롬포트...");
+        else if (type === "custom") setPrompt("맞춤 보고서 기본 프롬포트 형식...");
     };
 
-    const handleGenerateReport = () => {
+
+    /**
+     * ✅ 보고서 생성(서버 호출)
+     * - 서버가 filePath를 내려주면 미리보기/다운로드에 사용
+     */
+    // const handleGenerateReport = async () => {
+    //     // ✅ UI 레벨 중복 차단
+    //     if (isGenerating) return;
+    //
+    //     // ✅ UX 검증은 page에서
+    //     if (!selectedReportType) {
+    //         setErrorMsg("보고서 유형을 선택해주세요.");
+    //         setOpenError(true);
+    //         return;
+    //     }
+    //     if (!prompt.trim()) {
+    //         setErrorMsg("프롬포트를 입력해주세요.");
+    //         setOpenError(true);
+    //         return;
+    //     }
+    //
+    //     setIsGenerating(true);
+    //     setFilePath(""); // 이전 미리보기 제거
+    //
+    //     try {
+    //         const { fileUrl } = await reportApi.generateAndResolve({
+    //             reportType: selectedReportType,
+    //             prompt,
+    //             dataStartTime: null,
+    //             dataEndTime: null,
+    //         });
+    //
+    //         // ✅ page는 결과만 사용
+    //         setFilePath(fileUrl);
+    //     } catch (e) {
+    //         setErrorMsg(e.message);
+    //         setOpenError(true);
+    //     } finally {
+    //         setIsGenerating(false);
+    //     }
+    // };
+
+
+    /** API 연동 후 삭제 시작 **/
+        // 파일 존재 체크
+    const existsFile = async (url) => {
+            try {
+                const res = await fetch(url, { method: "HEAD" });
+                return res.ok;
+            } catch {
+                return false;
+            }
+        };
+
+    /* 미리보기 테스트 */
+    const handleGenerateReport = async () => {
+        if (isGenerating) return; // ✅ 이미 생성 중이면 무시
+
+        if (!selectedReportType) {
+            alert("보고서 유형을 선택해주세요.");
+            return;
+        }
         if (!prompt.trim()) {
             alert("프롬포트를 입력해주세요.");
             return;
         }
 
-        setReportPreview(
-            `생성된 보고서 미리보기:\n\n${prompt}\n\n[보고서 내용이 여기에 표시됩니다]`
-        );
+        setIsGenerating(true);
+
+        // 🔹 테스트용: 1초 뒤 가짜 filePath 세팅
+        setTimeout(async () => {
+            // const testPath = "/files/not-exist.pdf";
+            const testPath = "/pdf/test-report.pdf";
+            const ok = await existsFile(testPath);
+            if (!ok) {
+                setFilePath(""); // ✅ 미리보기 자체를 안 띄움
+                setErrorMsg("보고서 파일을 찾을 수 없습니다. 다시 생성해주세요.");
+                setOpenError(true);
+                setIsGenerating(false);
+                return;
+            }
+
+            setFilePath(testPath); // ✅ 존재할 때만 미리보기 띄움
+            setIsGenerating(false);
+        }, 1000);
     };
 
-    const confirmDownload = () => {
-        console.log("PDF 다운로드");
-        setShowDownloadConfirm(false);
-    };
+    /** API 연동 후 삭제 끝 **/
 
-    const confirmReset = () => {
-        setPrompt("");
-        setReportPreview("");
-        setSelectedReportType("");
-        setShowResetConfirm(false);
-    };
+    /**
+     * ✅ 다운로드 확인 누르면:
+     * - filePath를 새 탭으로 열거나,
+     * - a 태그 download로 저장 트리거
+     *
+     * (프록시가 Content-Disposition을 attachment로 주면 자동 다운로드 됨)
+     */
+    const confirmDownload = async () => {
+        try {
+            const fileUrl = await reportApi.validateDownload(filePath);
 
-    const confirmSave = () => {
-        console.log("보고서 저장");
-        setShowSaveConfirm(false);
+            // 실제 다운로드 UX는 page에서
+            window.open(fileUrl, "_blank", "noopener,noreferrer");
+
+            setOpenDownload(false);
+        } catch (e) {
+            setErrorMsg(e.message);
+            setOpenError(true);
+            setOpenDownload(false);
+        }
     };
 
     return (
         <>
-            {/* ✅ Report 페이지에서만 Header 사용 */}
             <Header />
 
             <div className={styles.container}>
                 <div className={styles.reportWrapper}>
+                    {/* 사이드바 */}
                     <div className={styles.sidebar}>
                         <h2 className={styles.sidebarTitle}>보고서 유형</h2>
                         <div className={styles.reportTypeList}>
                             <button
+                                disabled={isGenerating}
                                 className={`${styles.reportTypeButton} ${
                                     selectedReportType === "audit" ? styles.active : ""
                                 }`}
@@ -70,7 +166,9 @@ export default function Report() {
                             >
                                 감사용 보고서
                             </button>
+
                             <button
+                                disabled={isGenerating}
                                 className={`${styles.reportTypeButton} ${
                                     selectedReportType === "monthly" ? styles.active : ""
                                 }`}
@@ -78,7 +176,9 @@ export default function Report() {
                             >
                                 월별 보고서
                             </button>
+
                             <button
+                                disabled={isGenerating}
                                 className={`${styles.reportTypeButton} ${
                                     selectedReportType === "custom" ? styles.active : ""
                                 }`}
@@ -89,6 +189,7 @@ export default function Report() {
                         </div>
                     </div>
 
+                    {/* 메인 */}
                     <div className={styles.mainContent}>
                         <div className={styles.promptSection}>
                             <h2 className={styles.sectionTitle}>프롬포트 입력</h2>
@@ -98,33 +199,55 @@ export default function Report() {
                                 value={prompt}
                                 onChange={(e) => setPrompt(e.target.value)}
                                 rows={10}
+                                disabled={isGenerating}
                             />
+
                             <button
                                 className={styles.generateButton}
                                 onClick={handleGenerateReport}
+                                disabled={isGenerating}
                             >
-                                보고서 생성
+                                {isGenerating ? "생성 중..." : "보고서 생성"}
                             </button>
                         </div>
 
                         <div className={styles.previewSection}>
                             <h2 className={styles.sectionTitle}>보고서 미리보기</h2>
+
                             <div className={styles.previewContent}>
-                                {reportPreview ? (
-                                    <pre className={styles.previewText}>{reportPreview}</pre>
+                                {filePath ? (
+                                    // ✅ 서버가 준 PDF URL로 미리보기
+                                    // (CSP/헤더에 따라 iframe이 막힐 수 있음. 그땐 링크로 대체하면 됨)
+                                    <iframe
+                                        title="report-preview"
+                                        src={filePath}
+                                        style={{
+                                            width: "100%",
+                                            height: "420px",
+                                            border: "1px solid #ddd",
+                                            borderRadius: "8px",
+                                        }}
+                                    />
                                 ) : (
-                                    <p className={styles.emptyPreview}>
-                                        생성된 보고서가 없습니다.
-                                    </p>
+                                    <p className={styles.emptyPreview}>생성된 보고서가 없습니다.</p>
                                 )}
                             </div>
+
+                            {filePath && (
+                                <div style={{ marginTop: 10 }}>
+                                    <a href={filePath} target="_blank" rel="noreferrer">
+                                        새 탭에서 PDF 열기
+                                    </a>
+                                </div>
+                            )}
                         </div>
 
+                        {/* 하단 액션 */}
                         <div className={styles.actionButtons}>
                             <button
                                 className={styles.actionButton}
-                                onClick={() => setShowSaveConfirm(true)}
-                                disabled={!reportPreview}
+                                onClick={() => setOpenDownload(true)}
+                                disabled={!filePath}
                             >
                                 PDF 다운로드
                             </button>
@@ -132,53 +255,30 @@ export default function Report() {
                     </div>
                 </div>
 
-                {/* 다운로드 확인 */}
-                {showDownloadConfirm && (
-                    <div className={styles.modalOverlay}>
-                        <div className={styles.modal}>
-                            <h3>PDF 다운로드</h3>
-                            <p>생성된 보고서를 PDF로 다운로드하시겠습니까?</p>
-                            <div className={styles.modalButtons}>
-                                <button onClick={confirmDownload}>확인</button>
-                                <button onClick={() => setShowDownloadConfirm(false)}>
-                                    취소
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* 초기화 확인 */}
-                {showResetConfirm && (
-                    <div className={styles.modalOverlay}>
-                        <div className={styles.modal}>
-                            <h3>초기화</h3>
-                            <p>작성된 보고서를 초기화하시겠습니까?</p>
-                            <div className={styles.modalButtons}>
-                                <button onClick={confirmReset}>확인</button>
-                                <button onClick={() => setShowResetConfirm(false)}>
-                                    취소
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* 저장 확인 */}
-                {showSaveConfirm && (
-                    <div className={styles.modalOverlay}>
-                        <div className={styles.modal}>
-                            <h3>보고서 저장</h3>
-                            <p>생성된 보고서를 DB에 저장하시겠습니까?</p>
-                            <div className={styles.modalButtons}>
-                                <button onClick={confirmSave}>확인</button>
-                                <button onClick={() => setShowSaveConfirm(false)}>
-                                    취소
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                {/* MUI 팝업: PDF 다운로드 */}
+                <Dialog open={openDownload} onClose={() => setOpenDownload(false)} maxWidth="xs" fullWidth>
+                    <DialogTitle>PDF 다운로드</DialogTitle>
+                    <DialogContent>
+                        <Typography variant="body2">생성된 보고서를 PDF 파일로 다운로드하시겠습니까?</Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenDownload(false)} variant="outlined">
+                            취소
+                        </Button>
+                        <Button onClick={confirmDownload} variant="contained" disabled={!filePath}>
+                            확인
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog open={openError} onClose={() => setOpenError(false)} maxWidth="xs" fullWidth>
+                    <DialogTitle>파일을 불러올 수 없음</DialogTitle>
+                    <DialogContent>
+                        <Typography variant="body2">{errorMsg}</Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenError(false)} variant="contained">확인</Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </>
     );
